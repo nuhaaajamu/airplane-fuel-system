@@ -11,4 +11,5 @@ cmake-build-*/
 *.o
 *.out
 *.exe
-a.out
+a.outdriver.cpp
+driver.txt
