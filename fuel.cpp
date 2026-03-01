@@ -1,4 +1,3 @@
-// UMBC - CMSC 341 - Spring 2026 - Proj1
 #include "fuel.h"
 
 
