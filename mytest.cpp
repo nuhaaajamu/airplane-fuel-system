@@ -6,6 +6,7 @@ public:
     bool insertWhenEmpty(); // Evaluates if insertion is still successful even when list is empty.
     bool insertMultipleTanks();  // Evaluates whether the tank is properly added to the end of the list.
     bool validateInputError(); // Handles the error cases of the input passed in (ID, capacity, fuel)
+    bool validateInputEdge(); // Handles the edge cases of the inputs passed in (ID, capacity, fuel)
 };
 
 bool Tester::insertWhenEmpty(){
@@ -91,6 +92,36 @@ bool Tester::validateInputError() {
     return true;
 }
 
+bool Tester::validateInputEdge() {
+    // 1. Pass in the edge case for ID and evaluate if addTank() tries to guard against it.
+    //    tankID must be greater than or equal to zero, so the edge case is when they are equal.
+    FuelSys obj1;
+    if (obj1.addTank(0, 3000, 1000) == false) {
+        cout << "Error: The function guarded against zero as a value for m_tankID" << endl;
+        return false;
+    }
+
+    // 2. Pass in the edge case for tank capacity and evaluate if addTank() tries to guard against it.
+    //    tankCapacity must be greater than or equal to MINCAP, so the edge case is when they are equal.
+    FuelSys obj2;
+    if (obj2.addTank(10, MINCAP, 1000) == false) {
+        cout << "Error: The function guarded against the minimum capacity being a value for m_tankCapacity" << endl;
+        return false;
+    }
+
+
+    // 3. Pass in the edge case for tank fuel and evaluate if addTank() tries to guard against it.
+    //    tankFuel must be less than or equal to tankCapacity, so the edge case in when they are equal.
+    FuelSys obj3;
+    if (obj3.addTank(10, 3000, 3000) == false) {
+        cout << "Error: The function guarded against m_tankFuel being equal to m_tankCapacity" << endl;
+        return false;
+    }
+
+    cout << "Success: All edge cases for valid input were not guarded against. Values were assigned." << endl;
+    return true;
+}
+
 int main() {
     // Test addTank function
     cout << "===== Testing addTank() =====" << endl;
@@ -105,6 +136,9 @@ int main() {
     test.insertMultipleTanks();
 
     // Ensure that input passed in is validated properly.
-    cout << endl << "3. Checking error cases for invalid input" << endl;
+    cout << endl << "3. Checking error cases for input" << endl;
     test.validateInputError();
+
+    cout << endl << "4. Checking edge cases for valid input" << endl;
+    test.validateInputEdge();
 }
