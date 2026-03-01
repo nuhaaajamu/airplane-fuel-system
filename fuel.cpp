@@ -11,7 +11,7 @@ FuelSys::~FuelSys(){
 
 bool FuelSys::addTank(int tankID, int tankCap, int tankFuel = 0) {
     // Validate the fuel and capacity for the tank.
-    if (tankCap < MINCAP || tankFuel > tankCap) {
+    if (tankCap < MINCAP || tankFuel > tankCap || tankID < 0) {
         return false;
     }
 
