@@ -9,7 +9,7 @@ FuelSys::~FuelSys(){
 }
 
 
-bool FuelSys::addTank(int tankID, int tankCap, int tankFuel = 0) {
+bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
     // Validate the fuel and capacity for the tank.
     if (tankCap < MINCAP || tankFuel > tankCap || tankID < 0) {
         return false;
@@ -28,17 +28,15 @@ bool FuelSys::addTank(int tankID, int tankCap, int tankFuel = 0) {
         // Case 2: The list contains two or more tanks. So, we must check the ID of each tank in the list.
         else {
             Tank * traverse = m_current->m_next;
-            Tank * next = nullptr; // Tracks whether we have traversed through entire list.
 
-
-            while (next != m_current->m_next) {
-                // Ensure that our ID is unique.
+            // Ensure that our ID is unique.
+            do {
                 if (tankID == traverse->m_tankID) {
                     return false;
                 }
                 traverse = traverse->m_next;
-                next = traverse;
-            }
+
+            }while (traverse != m_current->m_next);
         }
 
         // After ensuring that we have a unique ID, a tank is added.
