@@ -2,9 +2,7 @@
 #include "fuel.h"
 
 
-FuelSys::FuelSys(){
-
-}
+FuelSys::FuelSys() : m_current(nullptr) {}
 
 
 FuelSys::~FuelSys(){
@@ -13,10 +11,55 @@ FuelSys::~FuelSys(){
 
 
 bool FuelSys::addTank(int tankID, int tankCap, int tankFuel = 0) {
-    // This function creates and inserts a new Tank object after the current location of the list and makes the node the current location.
-    // If the insertion is successful the function returns true, otherwise it returns false.
-    // Since the tank IDs must be unique in the list this function will not insert the tank if it already exists. In such a failure case the function returns false.
-    // The tankCap cannot be less than the min capacity. The amount of fuel cannot exceed the tank capacity.
+    // Validate the fuel and capacity for the tank.
+    if (tankCap < MINCAP || tankFuel > tankCap) {
+        return false;
+    }
+
+    // Validate that a unique ID is being used. This is only checked for non-empty lists.
+    if (m_current != nullptr) {
+
+        // Case 1: The list has only one tank, this means that the stored tank will point to itself.
+        if (m_current == m_current->m_next) {
+            if (tankID == m_current->m_tankID) {
+                return false;
+            }
+        }
+
+        // Case 2: The list contains two or more tanks. So, we must check the ID of each tank in the list.
+        else {
+            Tank * traverse = m_current->m_next;
+            Tank * next = nullptr; // Tracks whether we have traversed through entire list.
+
+
+            while (next != m_current->m_next) {
+                // Ensure that our ID is unique.
+                if (tankID == traverse->m_tankID) {
+                    return false;
+                }
+                traverse = traverse->m_next;
+                next = traverse;
+            }
+        }
+
+        // After ensuring that we have a unique ID, a tank is added.
+        Tank * newTank = new Tank(tankID, tankCap, tankFuel);
+        newTank->m_next = m_current->m_next;
+
+        m_current->m_next = newTank;  // Former last tank should point to new tank.
+
+        m_current = newTank;  // Now, update so that current stores the newly added node.
+
+        return true;
+    }
+
+    // If the list is empty and a tank is being added, the first and last tank will be the same.
+    else {
+        Tank * newTank = new Tank(tankID, tankCap, tankFuel);
+        m_current = newTank;
+        m_current->m_next = newTank;
+        return true;
+    }
 }
 
 
