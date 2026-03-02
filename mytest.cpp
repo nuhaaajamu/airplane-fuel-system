@@ -2,11 +2,14 @@
 
 class Tester {
 public:
-    // Tests addTank function
-    bool insertWhenEmpty(); // Evaluates if insertion is still successful even when list is empty.
-    bool insertMultipleTanks();  // Evaluates whether the tank is properly added to the end of the list.
+    // Tests for addTank function
+    bool insertWhenEmpty(); // Evaluates if insertion is still successful even when the list is empty.
+    bool insertMultipleTanks();  // Evaluates whether each tank is properly added to the end of the list.
     bool validateInputError(); // Handles the error cases of the input passed in (ID, capacity, fuel)
     bool validateInputEdge(); // Handles the edge cases of the inputs passed in (ID, capacity, fuel)
+
+    // Tests for removeTank function
+    bool removeAll(); // Tests whether all tanks are removed correctly.
 };
 
 bool Tester::insertWhenEmpty(){
@@ -122,9 +125,43 @@ bool Tester::validateInputEdge() {
     return true;
 }
 
+bool Tester::removeAll() {
+    FuelSys obj1;
+
+    // Add ten tanks to fuel system.
+    obj1.addTank(0, 2000, 500);
+    obj1.addTank(1, 2000, 500);
+    obj1.addTank(2, 2000, 500);
+    obj1.addTank(3, 2000, 500);
+    obj1.addTank(4, 2000, 500);
+    obj1.addTank(5, 2000, 500);
+    obj1.addTank(6, 2000, 500);
+    obj1.addTank(7, 2000, 500);
+    obj1.addTank(8, 2000, 500);
+    obj1.addTank(9, 2000, 500);
+
+    // Remove each tank one by one and observe to see if removal is successful.
+
+    // I need to think about if current updates properly.
+
+    if (obj1.removeTank(0) == false) {
+        cout << "Tank 0 was not successfully removed." << endl;
+        return false;
+    }
+
+
+    // Test value of remove function
+
+    // Determine whether size of list decreased.
+
+    // Search for ID and see if it exists.
+
+    // Check m_current for case in which we remove last tank.
+}
+
 int main() {
-    // Test addTank function
-    cout << "===== Testing addTank() =====" << endl;
+    // 1. Test addTank function
+    cout << "======= Testing addTank() =======" << endl;
     Tester test;
 
     // Ensure that a tank is added successfully to an empty list.
@@ -141,4 +178,12 @@ int main() {
 
     cout << endl << "4. Checking edge cases for valid input" << endl;
     test.validateInputEdge();
+
+
+    // 2. Test removeTank function
+    cout << endl << "====== Testing removeTank() ======" << endl;
+
+    // Ensure that each tank in a list is removed properly. Should return true for each removal.
+    cout << endl << "1. Removing all tanks from a populated list of 10 tanks" << endl;
+    test.removeAll();
 }
