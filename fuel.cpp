@@ -132,10 +132,23 @@ bool FuelSys::removePump(int tankID, int pumpID){
 
 
 int FuelSys::totalFuel() const{
-    // This function calculates and returns the total amount of current fuel in the airplane.
-    // The total amount of fuel is the sum of fuel in all tanks.
-}
+    int total = 0;
 
+    // If fuel system does not contain any tanks, no fuel exists.
+    if (m_current == nullptr) {
+        return total;
+    }
+
+    // Calculate total amount of fuel for all tanks in the fuel system.
+    Tank * first = m_current->m_next;
+    do {
+        total += first->m_tankFuel;
+        first = first->m_next;
+
+    }while (first != m_current->m_next);
+
+    return total;
+}
 
 bool FuelSys::drain(int tankID, int pumpID, int fuel){
     // This function transfers the fuel from tankID to the targetID specified in the pumpID.
