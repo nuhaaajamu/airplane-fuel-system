@@ -1,4 +1,5 @@
 #include "fuel.h"
+#include <vector>
 
 class Tester {
 public:
@@ -10,6 +11,7 @@ public:
 
     // Tests for removeTank function
     bool removeAll(); // Tests whether all tanks are removed correctly.
+
 };
 
 bool Tester::insertWhenEmpty(){
@@ -127,36 +129,61 @@ bool Tester::validateInputEdge() {
 
 bool Tester::removeAll() {
     FuelSys obj1;
+    vector <int> objID{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    // Add ten tanks to fuel system.
-    obj1.addTank(0, 2000, 500);
-    obj1.addTank(1, 2000, 500);
-    obj1.addTank(2, 2000, 500);
-    obj1.addTank(3, 2000, 500);
-    obj1.addTank(4, 2000, 500);
-    obj1.addTank(5, 2000, 500);
-    obj1.addTank(6, 2000, 500);
-    obj1.addTank(7, 2000, 500);
-    obj1.addTank(8, 2000, 500);
-    obj1.addTank(9, 2000, 500);
+    // Populate the fuel system.
+    for (int i = 0; i < 10; i++) {
+        obj1.addTank(i, 2000, 500);
+    }
 
-    // Remove each tank one by one and observe to see if removal is successful.
+    // Remove tanks one by one.
+    for (int j = 10; j >= 0; j--) {
+        bool result = obj1.removeTank(j);
+        objID.pop_back();
 
-    // I need to think about if current updates properly.
+        // Test value of remove function
+        if (result == false) {
+            cout << "removeTank() returned false (tank " << j << ")" << endl;
+            return false;
+        }
+
+        // Search for ID and see if it still exists.
+        if (obj1.findTank(j) == true) {
+            cout << "The tank ID still exists in the linked list (tank " << j << ")" << endl;
+        }
+
+
+        // Ensure that list order was preserved after removal
+        Tank * traverse = obj1.m_current;
+        for (int k = 0; k < 10; k++) {
+
+        }
+
+        do {
+            if (j == traverse->m_tankID) {
+                return false;
+            }
+            traverse = traverse->m_next;
+
+        }while (traverse != obj1.m_current->m_next);
+
+
+        // Update vector to reflect removal.
+
+
+        // Check m_current for case in which we remove last tank.
+
+    }
 
     if (obj1.removeTank(0) == false) {
         cout << "Tank 0 was not successfully removed." << endl;
         return false;
     }
 
-
     // Test value of remove function
 
     // Determine whether size of list decreased.
 
-    // Search for ID and see if it exists.
-
-    // Check m_current for case in which we remove last tank.
 }
 
 int main() {
