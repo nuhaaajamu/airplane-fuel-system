@@ -4,13 +4,22 @@
 class Tester {
 public:
     // Tests for addTank function
-    bool insertWhenEmpty(); // Evaluates if insertion is still successful even when the list is empty.
-    bool insertMultipleTanks();  // Evaluates whether each tank is properly added to the end of the list.
+    bool insertWhenEmpty(); // Evaluates if insertion is still successful even when the list is empty
+    bool insertMultipleTanks();  // Evaluates whether each tank is properly added to the end of the list
     bool validateInputError(); // Handles the error cases of the input passed in (ID, capacity, fuel)
     bool validateInputEdge(); // Handles the edge cases of the inputs passed in (ID, capacity, fuel)
 
     // Tests for removeTank function
     bool removeAll(); // Tests whether all tanks are removed correctly.
+
+
+    // Tests for totalFuel function
+    bool calculateFuelEmpty(); // Evaluates fuel amount for when no tank exists (error case)
+    bool calculateFuel(); // Evaluates if total is calculated accurately (normal case)
+
+
+    // Test whether totalFuel() works correctly for a normal case. It returns the correct value.
+    // Test whether totalFuel() works correctly for an error case. It returns zero where there is no tank in the system.
 
 };
 
@@ -186,6 +195,19 @@ bool Tester::removeAll() {
 
 }
 
+bool calculateFuelEmpty() {
+    FuelSys obj;
+    int result = obj.totalFuel();
+
+    if (result == 0) {
+        cout << "Success: total fuel calculated for a non-existent tank is zero" << endl;
+        return true;
+    }
+
+    cout << "Error: total fuel calculated for a non-existent tank is not zero";
+    return false;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
@@ -213,4 +235,13 @@ int main() {
     // Ensure that each tank in a list is removed properly. Should return true for each removal.
     cout << endl << "1. Removing all tanks from a populated list of 10 tanks" << endl;
     test.removeAll();
+
+
+
+
+    // 4. Test totalFuel function
+    cout << endl << "====== Testing totalFuel() ======" << endl;
+
+    cout << "1. Calculating total fuel for a non-existent tank" << endl;
+    test.calculateFuelEmpty();
 }
