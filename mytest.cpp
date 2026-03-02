@@ -208,6 +208,25 @@ bool calculateFuelEmpty() {
     return false;
 }
 
+bool calculateFuel() {
+    FuelSys obj;
+    int expectedTotal = 600;
+
+    obj.addTank(1, 2000, 100);
+    obj.addTank(2, 2000, 200);
+    obj.addTank(3, 2000, 300);
+
+    bool result = obj.totalFuel();
+
+    if (result != expectedTotal) {
+        cout << "Error: total fuel was calculated incorrectly" << endl;
+        return false;
+    }
+
+    cout << "Success: total fuel was calculated correctly" << endl;
+    return true;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
@@ -233,7 +252,7 @@ int main() {
     cout << endl << "====== Testing removeTank() ======" << endl;
 
     // Ensure that each tank in a list is removed properly. Should return true for each removal.
-    cout << endl << "1. Removing all tanks from a populated list of 10 tanks" << endl;
+    cout << endl << "1. Removing all tanks from a fuel system containing ten tanks" << endl;
     test.removeAll();
 
 
@@ -244,4 +263,7 @@ int main() {
 
     cout << "1. Calculating total fuel for a non-existent tank" << endl;
     test.calculateFuelEmpty();
+
+    cout << "2. Calculating total fuel for a fuel system containing three tanks" << endl;
+    test.calculateFuel();
 }
