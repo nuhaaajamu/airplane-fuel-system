@@ -61,8 +61,49 @@ bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
 
 
 bool FuelSys::removeTank(int tankID){
-    // This function removes the tank with tankID from the list. If the requested tank is removed the function returns true otherwise it returns false, i.e. if tankID does not exists the function returns false.
-    // Note, if the tank has pumps the list of pumps must be removed too.
+    bool foundID = false; // Tracks whether a match is found.
+
+    // If the list is empty, there is no tank to remove.
+    if (m_current == nullptr) {
+        return false;
+    }
+
+    Tank * traverse = m_current->m_next;
+    Tank * beforeTarget = nullptr;
+
+    // Find the target tank.
+    do {
+        if (traverse->m_next->m_tankID == tankID) {
+            foundID = true;
+            beforeTarget = traverse;
+        }
+        traverse = traverse->m_next;
+
+    }while (traverse != m_current->m_next  && foundID == false);
+
+    // Ensure that we have found a match before attempting to remove the tank.
+    if (foundID == false || beforeTarget == nullptr) {
+        return false;
+    }
+
+    // Remove the target tank. Since m_current tracks the last tank, only update if the last tank is affected.
+    Tank * target = beforeTarget->m_next;
+    if (m_current == target) {
+
+        // If there is only one tank, then we simply just delete it.
+        if (m_current->m_next == m_current) {
+            delete m_current;
+            m_current = nullptr;
+            return true;
+        }
+
+        m_current = beforeTarget;
+    }
+
+    beforeTarget->m_next = target->m_next;
+    delete target;
+
+    return true;
 }
 
 
