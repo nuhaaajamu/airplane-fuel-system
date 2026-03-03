@@ -21,6 +21,12 @@ public:
     // Test whether totalFuel() works correctly for a normal case. It returns the correct value.
     // Test whether totalFuel() works correctly for an error case. It returns zero where there is no tank in the system.
 
+
+    // Tests for findTank() function
+    bool findTankNormal(); // Tests whether it works correctly for a normal case.
+
+    // Test whether findTank() works correctly for an error case which the tank does not exist in the list.
+
 };
 
 bool Tester::insertWhenEmpty(){
@@ -227,6 +233,33 @@ bool calculateFuel() {
     return true;
 }
 
+bool Tester::findTankNormal() {
+    // Populate the list with tanks.
+    FuelSys obj;
+    for (int ID = 0; ID < 50; ID++) {
+        obj.addTank(ID, 2000, 500);
+    }
+
+    // Search for each tank and check to see if the found tank is the next node of the current node in the list.
+    for (int ID = 0; ID < 50; ID++) {
+
+        // Ensure that a tank was found.
+        if (obj.findTank(ID) == false) {
+            cout << "Error: findTank() returned false" << endl;
+            return false;
+        }
+
+        // If a tank was found, check that m_current->m_next is properly updated to reflect this.
+        if (obj.m_current->m_next->m_tankID != ID) {
+            cout << "Error: The found tank is not the next node of the current node (ID: " << ID << ")" << endl;
+            return false;
+        }
+    }
+
+    cout << "Success: Each tank was successfully found" << endl;
+    return true;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
@@ -266,4 +299,11 @@ int main() {
 
     cout << "2. Calculating total fuel for a fuel system containing three tanks" << endl;
     test.calculateFuel();
+
+
+    // 5. Test findTank function
+    cout << endl << "====== Testing findTank() ======" << endl;
+
+    cout << "1. Adding fifty tanks to a fuel system and finding each of them" << endl;
+    test.findTankNormal();
 }
