@@ -4,27 +4,22 @@
 class Tester {
 public:
     // Tests for addTank function
-    bool insertWhenEmpty(); // Evaluates if insertion is still successful even when the list is empty
-    bool insertMultipleTanks();  // Evaluates whether each tank is properly added to the end of the list
-    bool validateInputError(); // Handles the error cases of the input passed in (ID, capacity, fuel)
-    bool validateInputEdge(); // Handles the edge cases of the inputs passed in (ID, capacity, fuel)
+    bool insertWhenEmpty(); // Tests if insertion is still successful even when the list is empty
+    bool insertMultipleTanks();  // Tests whether each tank is properly added to the end of the list
+    bool validateInputError(); // Tests the error cases of the input passed in (ID, capacity, fuel), should not add a tank
+    bool validateInputEdge(); // Tests the edge cases of the inputs passed in (ID, capacity, fuel), should add a tank
 
     // Tests for removeTank function
     bool removeAll(); // Tests whether all tanks are removed correctly.
 
 
     // Tests for totalFuel function
-    bool calculateFuelEmpty(); // Evaluates fuel amount for when no tank exists (error case)
-    bool calculateFuel(); // Evaluates if total is calculated accurately (normal case)
+    bool calculateFuelEmpty(); // Tests fuel amount for when no tank exists, should return zero (error case)
+    bool calculateFuel(); // Tests if total is calculated accurately (normal case)
 
-
-    // Test whether totalFuel() works correctly for a normal case. It returns the correct value.
-    // Test whether totalFuel() works correctly for an error case. It returns zero where there is no tank in the system.
-
-
-    // Tests for findTank() function
-    bool findTankNormal(); // Tests whether it works correctly for a normal case.
-    bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system.
+    // Tests for findTank function
+    bool findTankNormal(); // Tests whether it works correctly for a normal case
+    bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system
 };
 
 bool Tester::insertWhenEmpty(){
