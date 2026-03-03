@@ -3,28 +3,30 @@
 
 class Tester {
 public:
-    // Tests for addTank function
+    // Tests for addTank()
     bool addTankEmpty(); // Tests if insertion is still successful even when the list is empty
     bool addMultipleTanks();  // Tests whether each tank is properly added to the end of the list
     bool validateInputError(); // Tests the error cases of the input passed in (ID, capacity, fuel), should not add a tank
     bool validateInputEdge(); // Tests the edge cases of the inputs passed in (ID, capacity, fuel), should add a tank
 
-    // Tests for removeTank function
+    // Tests for removeTank()
     bool removeAll(); // Tests whether all tanks are removed correctly.
 
 
-    // Tests for totalFuel function
+    // Tests for totalFuel()
     bool calculateFuelEmpty(); // Tests fuel amount for when no tank exists, should return zero (error case)
     bool calculateFuel(); // Tests if total is calculated accurately (normal case)
 
-    // Tests for findTank function
+    // Tests for findTank()
     bool findTankNormal(); // Tests whether it works correctly for a normal case
     bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system
 
-    // Test whether addPump() works correctly for an error case. It does not add a duplicate pump ID to a tank.
+    // Tests for addPump()
+    bool multiplePumps(); // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
+    bool duplicatePumps(); // Tests whether the function guards against a pump with a duplicate pumpID (error case)
+
     // Another error case would be adding a pump to a tank that does not exist.
-    bool multiplePumps();
-    bool duplicatePumps();
+
 };
 
 bool Tester::addTankEmpty(){
