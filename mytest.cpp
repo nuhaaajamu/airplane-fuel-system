@@ -275,7 +275,7 @@ bool findTankError() {
     return true;
 }
 
-bool Tester::multiplePumps() {
+bool Tester::addMultiplePumps() {
     // Populate the list with tanks.
     FuelSys obj;
     for (int tankID = 0; tankID < 60; tankID++) {
@@ -313,7 +313,7 @@ bool Tester::multiplePumps() {
     return true;
 }
 
-bool Tester::duplicatePumps() {
+bool Tester::addDuplicatePump() {
     // Populate the list with tanks.
 
     FuelSys obj;
@@ -396,10 +396,10 @@ int main() {
     cout << endl << "====== Testing addPump() ======" << endl;
 
     cout << "1. Adding multiple pumps to multiple tanks" << endl;
-    test.multiplePumps();
+    test.addMultiplePumps();
 
     cout << "1. Adding a duplicate pump to a tank" << endl;
-    test.duplicatePumps();
+    test.addDuplicatePump();
 
 
 }
