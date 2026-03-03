@@ -108,10 +108,34 @@ bool FuelSys::removeTank(int tankID){
 
 
 bool FuelSys::findTank(int tankID){
-    // This function searches the list for tankID.
-    // If the ID is found the function makes it the next of current location and it returns true.
-    // If the ID is not found the function returns false.
+    bool foundTank = false; // Tracks whether a match is found.
 
+    // If the list is empty, there is no tank to find.
+    if (m_current == nullptr) {
+        return false;
+    }
+
+    // Find the target tank.
+    Tank * traverse = m_current->m_next;
+    Tank * target = nullptr;
+
+    do {
+        if (traverse->m_tankID == tankID) {
+            foundTank = true;
+            target = traverse;
+        }
+        traverse = traverse->m_next;
+
+    }while (traverse != m_current->m_next  && foundTank == false);
+
+    // Ensure that we have found a match before updating m_current.
+    if (foundTank == false || target == nullptr) {
+        return false;
+    }
+
+    // Now, the last node becomes the target tank.
+    m_current = target;
+    return true;
 }
 
 
@@ -163,6 +187,8 @@ bool FuelSys::fill(int tankID, int fuel){
     // This function fills up the tankID with the amount of fuel.
     // If the empty space of the tank is less than fuel the function still fills up the tank up to its capacity and returns true.
     // If the tank does not exist the function returns false.
+
+
 }
 
 
