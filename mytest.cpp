@@ -24,9 +24,7 @@ public:
 
     // Tests for findTank() function
     bool findTankNormal(); // Tests whether it works correctly for a normal case.
-
-    // Test whether findTank() works correctly for an error case which the tank does not exist in the list.
-
+    bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system.
 };
 
 bool Tester::insertWhenEmpty(){
@@ -260,6 +258,23 @@ bool Tester::findTankNormal() {
     return true;
 }
 
+bool findTankError() {
+    // Populate the list with tanks.
+    FuelSys obj;
+    for (int ID = 0; ID < 10; ID++) {
+        obj.addTank(ID, 2000, 500);
+    }
+
+    // Observe to see if findTank() guards properly against searching for a tank that does not exist.
+    if (obj.findTank(20) != false) {
+        cout << "Error: False was not returned for a non-existent tank" << endl;
+        return false;
+    }
+
+    cout << "Success: False was returned for a non-existent tank" << endl;
+    return true;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
@@ -306,4 +321,7 @@ int main() {
 
     cout << "1. Adding fifty tanks to a fuel system and finding each of them" << endl;
     test.findTankNormal();
+
+    cout << "2. Searching for a non-existent tank in a fuel system" << endl;
+    test.findTankError();
 }
