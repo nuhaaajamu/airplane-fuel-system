@@ -315,7 +315,6 @@ bool Tester::addMultiplePumps() {
 
 bool Tester::addDuplicatePump() {
     // Populate the list with tanks.
-
     FuelSys obj;
     for (int tankID = 0; tankID < 60; tankID++) {
         obj.addTank(tankID, 2000, 500);
@@ -340,6 +339,28 @@ bool Tester::addDuplicatePump() {
 
     cout << "Success: Duplicate pumps are not able to be added to a tank" << endl;
 }
+
+bool Tester::invalidTank() {
+    FuelSys obj;
+    int invalidTank = 70;  // A tank that does not exist within the fuel system
+    int pumpID = 1; // Arbitrary value for pumpID used to create a pump
+    int target = 10; // Arbitrary value for targetTank used to create a pump
+
+    // Populate the list with tanks.
+    for (int tankID = 0; tankID < 50; tankID++) {
+        obj.addTank(tankID, 2000, 500);
+    }
+
+    // Check to see if a pump can be added to a tank that does not exist
+    if (obj.addPump(invalidTank, pumpID, target) != false) {
+        cout << "Error: A pump was added to a non-existent tank" << endl;
+        return false;
+    }
+
+    cout << "Success: A pump was not added to a non-existent tank" << endl;
+    return true;
+}
+
 
 int main() {
     // 1. Test addTank function
@@ -398,8 +419,9 @@ int main() {
     cout << "1. Adding multiple pumps to multiple tanks" << endl;
     test.addMultiplePumps();
 
-    cout << "1. Adding a duplicate pump to a tank" << endl;
+    cout << "2. Adding a duplicate pump to a tank" << endl;
     test.addDuplicatePump();
 
-
+    cout << "3. Attempting to add a pump to a non-existent tank" << endl;
+    test.invalidTank();
 }
