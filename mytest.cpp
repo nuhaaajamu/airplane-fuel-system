@@ -9,6 +9,7 @@ public:
     bool validateInputError(); // Tests the error cases of the input passed in (ID, capacity, fuel), should not add a tank
     bool validateInputEdge(); // Tests the edge cases of the inputs passed in (ID, capacity, fuel), should add a tank
 
+
     // Tests for removeTank()
     bool removeAll(); // Tests whether all tanks are removed correctly.
 
@@ -17,14 +18,23 @@ public:
     bool calculateFuelEmpty(); // Tests fuel amount for when no tank exists, should return zero (error case)
     bool calculateFuel(); // Tests if total is calculated accurately (normal case)
 
+
     // Tests for findTank()
     bool findTankNormal(); // Tests whether it works correctly for a normal case
     bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system
+
 
     // Tests for addPump()
     bool addMultiplePumps(); // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
     bool addDuplicatePump(); // Tests whether the function guards against a pump with a duplicate pumpID (error case)
     bool invalidTank(); // Tests how function handles adding a pump to a non-existent tank
+
+
+    // Tests for removePump()
+    bool removeMultiplePumps(); // Tests whether the function works correctly when removing multiple pumps from a tank (normal case)
+
+    // Test whether removePump() works correctly for an error case.
+    // That is trying to remove a non-existent pump or trying to remove a pump from a non-existent tank.
 };
 
 bool Tester::addTankEmpty(){
@@ -320,7 +330,7 @@ bool Tester::addDuplicatePump() {
         obj.addTank(tankID, 2000, 500);
     }
 
-    // Add pumps to each tank
+    // Add pumps to some of the tanks
     for (int tankID = 0; tankID < 3; tankID++) {
         for (int pumpID = 0, targetTank = 1; pumpID < 50; pumpID++, targetTank++) {
             obj.addPump(tankID, pumpID, targetTank);
@@ -361,6 +371,35 @@ bool Tester::invalidTank() {
     return true;
 }
 
+bool Tester::removeMultiplePumps() {
+    // It removes multiple pumps from some of the tanks.
+
+    // Populate the list with tanks.
+    FuelSys obj;
+    for (int tankID = 0; tankID < 70; tankID++) {
+        obj.addTank(tankID, 2000, 500);
+    }
+
+    // Add sixty pumps to each tank
+    for (int tankID = 0; tankID < 70; tankID++) {
+        for (int pumpID = 0, targetTank = 1; pumpID < 60; pumpID++, targetTank++) {
+            obj.addPump(tankID, pumpID, targetTank);
+        }
+    }
+
+    // Remove fifty pumps from some of the tanks and check the status after each removal.
+    for (int tankID = 0; tankID < 50; tankID++) {
+        for (int pumpID = 0; pumpID < 50; pumpID++) {
+            if (obj.removePump(tankID, pumpID) == false) {
+                cout << "Error: Pump (" << pumpID << ") removal failed for tank (" << tankID << ")" << endl;
+                return false;
+            }
+        }
+    }
+
+    cout << "Success: Multiple pumps were removed successfully from multiple tanks" << endl;
+    return true;
+}
 
 int main() {
     // 1. Test addTank function
@@ -424,4 +463,11 @@ int main() {
 
     cout << "3. Attempting to add a pump to a non-existent tank" << endl;
     test.invalidTank();
+
+
+    // 7. Testing removePump function
+    cout << endl << "====== Testing removePump() ======" << endl;
+    cout << "1. Removing multiple pumps from tanks" << endl;
+    test.removeMultiplePumps();
+
 }
