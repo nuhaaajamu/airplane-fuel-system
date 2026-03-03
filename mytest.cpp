@@ -20,6 +20,10 @@ public:
     // Tests for findTank function
     bool findTankNormal(); // Tests whether it works correctly for a normal case
     bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system
+
+    // Test whether addPump() works correctly for an error case. It does not add a duplicate pump ID to a tank.
+    // Another error case would be adding a pump to a tank that does not exist.
+    bool addMultiplePumps();
 };
 
 bool Tester::insertWhenEmpty(){
@@ -256,17 +260,55 @@ bool Tester::findTankNormal() {
 bool findTankError() {
     // Populate the list with tanks.
     FuelSys obj;
-    for (int ID = 0; ID < 10; ID++) {
+    for (int ID = 0; ID < 50; ID++) {
         obj.addTank(ID, 2000, 500);
     }
 
     // Observe to see if findTank() guards properly against searching for a tank that does not exist.
-    if (obj.findTank(20) != false) {
+    if (obj.findTank(70) != false) {
         cout << "Error: False was not returned for a non-existent tank" << endl;
         return false;
     }
 
     cout << "Success: False was returned for a non-existent tank" << endl;
+    return true;
+}
+
+bool Tester::addMultiplePumps() {
+    // Populate the list with tanks.
+    FuelSys obj;
+    for (int tankID = 0; tankID < 60; tankID++) {
+        obj.addTank(tankID, 2000, 500);
+    }
+
+    // Add pumps to each tank and evaluate whether they were successfully added for each addition.
+    for (int tankID = 0; tankID < 3; tankID++) {
+        for (int pumpID = 0, targetTank = 1; pumpID < 50; pumpID++, targetTank++) {
+            if (obj.addPump(tankID, pumpID, targetTank) == false) {
+                cout << "Error: Pump (" << pumpID << ") was not able to be added to tank (" << tankID << ")" << endl;
+                return false;
+            }
+
+            // Check that the head of the list was updated to store the added pump.
+            if (obj.m_current->m_next->m_pumps->m_pumpID != pumpID) {
+                cout << "Error: The head of the list of pumps was not updated to point to the new pump" << endl;
+                return false;
+            }
+        }
+
+        // Check that the number of pumps in the tank reflects the number of pumps that were added.
+        int count = 0;
+        Pump * currentPump = obj.m_current->m_next->m_pumps;
+        while (currentPump != nullptr) {
+            count++;
+        }
+        if (count != 50) {
+            cout << "Error: Only " << count << "/50 pumps were added to the tank" << endl;
+            return false;
+        }
+    }
+
+    cout << "Success: All pumps were successfully added to each tank" << endl;
     return true;
 }
 
@@ -319,4 +361,11 @@ int main() {
 
     cout << "2. Searching for a non-existent tank in a fuel system" << endl;
     test.findTankError();
+
+
+    // 6. Testing addPump function
+    cout << endl << "====== Testing addPump() ======" << endl;
+
+    cout << "1. Adding multiple pumps to multiple tanks" << endl;
+    test.addMultiplePumps();
 }
