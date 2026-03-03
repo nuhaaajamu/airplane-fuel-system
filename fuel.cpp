@@ -115,26 +115,26 @@ bool FuelSys::findTank(int tankID){
         return false;
     }
 
-    // Find the target tank.
+    // Find the tank before the target tank.
     Tank * traverse = m_current->m_next;
-    Tank * target = nullptr;
+    Tank * beforeTarget = nullptr;
 
     do {
-        if (traverse->m_tankID == tankID) {
+        if (traverse->m_next->m_tankID == tankID) {
             foundTank = true;
-            target = traverse;
+            beforeTarget = traverse;
         }
         traverse = traverse->m_next;
 
     }while (traverse != m_current->m_next  && foundTank == false);
 
     // Ensure that we have found a match before updating m_current.
-    if (foundTank == false || target == nullptr) {
+    if (foundTank == false || beforeTarget == nullptr) {
         return false;
     }
 
-    // Now, the last node becomes the target tank.
-    m_current = target;
+    // The tank before the target becomes the last node so that the target node becomes the first.
+    m_current = beforeTarget;
     return true;
 }
 
