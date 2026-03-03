@@ -138,13 +138,32 @@ bool FuelSys::findTank(int tankID){
     return true;
 }
 
-
 bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
-    // This function finds the tankID and adds a pump with pumpID to the tank's pump list.
-    // The targetTank is the tank ID that will receive fuel from the parent of the pump in the case of transfer requests.
-    // Both tankID and targetID must exist in the list in order to add the pump.
-    // In the case of success the function returns true, otherwise it returns false.
-    // The pump must be added to the head of the pump list.
+    // Ensure that the targetTank exists.
+    if (findTank(targetTank) == false) {
+        return true;
+    }
+
+    // Find the tank that we are adding a pump to and ensure that it exists. This rotates the list so that the tank is the "first tank" in the list.
+    if (findTank(tankID) == false) {
+        return false;
+    }
+
+    // Ensure that the pumpID is unique.
+    Pump * currentPump = m_current->m_next->m_pumps;
+    while (currentPump != nullptr) {
+        if (currentPump->m_pumpID == pumpID) {
+            return false;
+        }
+
+        currentPump = currentPump->m_next;
+    }
+
+    // Add the pump to the tank.
+    Pump * head = m_current->m_next->m_pumps;
+    Pump * newPump = new Pump(tankID, targetTank, head);
+    head = newPump;
+    return true;
 }
 
 
