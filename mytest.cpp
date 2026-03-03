@@ -4,8 +4,8 @@
 class Tester {
 public:
     // Tests for addTank function
-    bool insertWhenEmpty(); // Tests if insertion is still successful even when the list is empty
-    bool insertMultipleTanks();  // Tests whether each tank is properly added to the end of the list
+    bool addTankEmpty(); // Tests if insertion is still successful even when the list is empty
+    bool addMultipleTanks();  // Tests whether each tank is properly added to the end of the list
     bool validateInputError(); // Tests the error cases of the input passed in (ID, capacity, fuel), should not add a tank
     bool validateInputEdge(); // Tests the edge cases of the inputs passed in (ID, capacity, fuel), should add a tank
 
@@ -27,7 +27,7 @@ public:
     bool duplicatePumps();
 };
 
-bool Tester::insertWhenEmpty(){
+bool Tester::addTankEmpty(){
     // Ensure that a tank can be successfully added to an empty list.
     FuelSys obj;
     bool result = obj.addTank(5, 2500, 1000);
@@ -49,7 +49,7 @@ bool Tester::insertWhenEmpty(){
     return true;
 }
 
-bool Tester::insertMultipleTanks() {
+bool Tester::addMultipleTanks() {
     // Check that m_current is being updated properly as each tank is added by evaluating the ID.
     FuelSys obj;
 
@@ -348,11 +348,11 @@ int main() {
 
     // Ensure that a tank is added successfully to an empty list.
     cout << endl << "1. Inserting a tank in an empty list" << endl;
-    test.insertWhenEmpty();
+    test.addTankEmpty();
 
     // Ensure that multiple can be added in the intended order.
     cout << endl << "2. Inserting multiple tanks consecutively" << endl;
-    test.insertMultipleTanks();
+    test.addMultipleTanks();
 
     // Ensure that input passed in is validated properly.
     cout << endl << "3. Checking error cases for input" << endl;
