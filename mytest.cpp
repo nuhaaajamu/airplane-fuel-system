@@ -435,26 +435,21 @@ int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
     Tester test;
-
     // Ensure that a tank is added successfully to an empty list.
     cout << endl << "1. Inserting a tank in an empty list" << endl;
     test.addTankEmpty();
-
     // Ensure that multiple can be added in the intended order.
     cout << endl << "2. Inserting multiple tanks consecutively" << endl;
     test.addMultipleTanks();
-
     // Ensure that input passed in is validated properly.
     cout << endl << "3. Checking error cases for input" << endl;
     test.validateInputError();
-
     cout << endl << "4. Checking edge cases for valid input" << endl;
     test.validateInputEdge();
 
 
     // 2. Test removeTank function
     cout << endl << "====== Testing removeTank() ======" << endl;
-
     // Ensure that each tank in a list is removed properly. Should return true for each removal.
     cout << endl << "1. Removing all tanks from a fuel system containing ten tanks" << endl;
     test.removeAll();
@@ -464,33 +459,26 @@ int main() {
 
     // 4. Test totalFuel function
     cout << endl << "====== Testing totalFuel() ======" << endl;
-
     cout << "1. Calculating total fuel for a non-existent tank" << endl;
     test.calculateFuelEmpty();
-
     cout << "2. Calculating total fuel for a fuel system containing three tanks" << endl;
     test.calculateFuel();
 
 
     // 5. Test findTank function
     cout << endl << "====== Testing findTank() ======" << endl;
-
     cout << "1. Adding fifty tanks to a fuel system and finding each of them" << endl;
     test.findTankNormal();
-
     cout << "2. Searching for a non-existent tank in a fuel system" << endl;
     test.findTankError();
 
 
     // 6. Testing addPump function
     cout << endl << "====== Testing addPump() ======" << endl;
-
     cout << "1. Adding multiple pumps to multiple tanks" << endl;
     test.addMultiplePumps();
-
     cout << "2. Adding a duplicate pump to a tank" << endl;
     test.addDuplicatePump();
-
     cout << "3. Attempting to add a pump to a non-existent tank" << endl;
     test.addPumpInvalidTank();
 
@@ -501,6 +489,4 @@ int main() {
     test.removeMultiplePumps();
     cout << "2. Attempting to remove a non-existent pump from a non-existent tank" << endl;
     test.removePumpInvalid();
-
-
 }
