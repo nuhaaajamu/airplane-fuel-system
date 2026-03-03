@@ -23,7 +23,8 @@ public:
 
     // Test whether addPump() works correctly for an error case. It does not add a duplicate pump ID to a tank.
     // Another error case would be adding a pump to a tank that does not exist.
-    bool addMultiplePumps();
+    bool multiplePumps();
+    bool duplicatePumps();
 };
 
 bool Tester::insertWhenEmpty(){
@@ -274,7 +275,7 @@ bool findTankError() {
     return true;
 }
 
-bool Tester::addMultiplePumps() {
+bool Tester::multiplePumps() {
     // Populate the list with tanks.
     FuelSys obj;
     for (int tankID = 0; tankID < 60; tankID++) {
@@ -310,6 +311,34 @@ bool Tester::addMultiplePumps() {
 
     cout << "Success: All pumps were successfully added to each tank" << endl;
     return true;
+}
+
+bool Tester::duplicatePumps() {
+    // Populate the list with tanks.
+
+    FuelSys obj;
+    for (int tankID = 0; tankID < 60; tankID++) {
+        obj.addTank(tankID, 2000, 500);
+    }
+
+    // Add pumps to each tank
+    for (int tankID = 0; tankID < 3; tankID++) {
+        for (int pumpID = 0, targetTank = 1; pumpID < 50; pumpID++, targetTank++) {
+            obj.addPump(tankID, pumpID, targetTank);
+        }
+    }
+
+    // Attempt to add a duplicate pumpID. We are adding a duplicate pump to the first tank in the list.
+    int duplicatePump = 10;
+    int tankID = 0;
+    int targetTank = 10;
+
+    if (obj.addPump(tankID, duplicatePump, targetTank) != false) {
+        cout << "Error: A duplicate pump was added" << endl;
+        return false;
+    }
+
+    cout << "Success: Duplicate pumps are not able to be added to a tank" << endl;
 }
 
 int main() {
@@ -367,5 +396,10 @@ int main() {
     cout << endl << "====== Testing addPump() ======" << endl;
 
     cout << "1. Adding multiple pumps to multiple tanks" << endl;
-    test.addMultiplePumps();
+    test.multiplePumps();
+
+    cout << "1. Adding a duplicate pump to a tank" << endl;
+    test.duplicatePumps();
+
+
 }
