@@ -141,7 +141,7 @@ bool FuelSys::findTank(int tankID){
 bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
     // Ensure that the targetTank exists.
     if (findTank(targetTank) == false) {
-        return true;
+        return false;
     }
 
     // Find the tank that we are adding a pump to and ensure that it exists. This rotates the list so that the tank is the "first tank" in the list.
@@ -168,11 +168,48 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
 
 
 bool FuelSys::removePump(int tankID, int pumpID){
-    // This function removes the pumpID from the tankID.
-    // If the remove operation is successful the function returns true.
-    // If either tankID or pumpID does not exist it is a failure and the function returns false.
-}
+    // Ensure that the tank we are removing a pump from exists.
+    if (findTank(tankID) == false) {
+        return false;
+    }
 
+    // 1. Check if the list is empty. If no pumps exist, there is nothing to remove.
+    Pump * currentPump = m_current->m_next->m_pumps;
+    if (currentPump == nullptr) {
+        cout << "Error: No pumps have been added to the tank" << endl;
+        return false;
+    }
+
+    // 2. Check if the pump we are looking for is the "head" of the list.
+    Pump * nextPump = currentPump->m_next;
+    if (currentPump->m_pumpID == pumpID) {
+        delete currentPump;
+        m_current->m_next->m_pumps = nextPump;
+        return true;
+    }
+
+    // 3. Ensure that pumpID exists.
+    bool foundPump = false;
+    Pump * beforeTarget = nullptr;
+    while (currentPump != nullptr && foundPump == false) {
+        if (pumpID == currentPump->m_next->m_pumpID) {
+            foundPump = true;
+            beforeTarget = currentPump;
+        }
+        currentPump = currentPump->m_next;
+    }
+
+    // A pumpID must be found as well as the node before it in order to proceed in removing the target pump.
+    if (foundPump == false || beforeTarget == nullptr) {
+        return false;
+    }
+
+    // 4. Remove the pump.
+    Pump * target = beforeTarget->m_next; // This is the pump we are removing.
+    beforeTarget->m_next = target->m_next;
+    delete target;
+    return true;
+}
 
 int FuelSys::totalFuel() const{
     int total = 0;
