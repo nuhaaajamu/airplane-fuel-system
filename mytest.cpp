@@ -27,14 +27,12 @@ public:
     // Tests for addPump()
     bool addMultiplePumps(); // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
     bool addDuplicatePump(); // Tests whether the function guards against a pump with a duplicate pumpID (error case)
-    bool invalidTank(); // Tests how function handles adding a pump to a non-existent tank
+    bool addPumpInvalidTank(); // Tests how function handles adding a pump to a non-existent tank
 
 
     // Tests for removePump()
     bool removeMultiplePumps(); // Tests whether the function works correctly when removing multiple pumps from a tank (normal case)
-
-    // Test whether removePump() works correctly for an error case.
-    // That is trying to remove a non-existent pump or trying to remove a pump from a non-existent tank.
+    bool removePumpInvalid(); // Tests whether the function works correctly when there is a non-existent pump or non-existent tank (error case)
 };
 
 bool Tester::addTankEmpty(){
@@ -350,7 +348,7 @@ bool Tester::addDuplicatePump() {
     cout << "Success: Duplicate pumps are not able to be added to a tank" << endl;
 }
 
-bool Tester::invalidTank() {
+bool Tester::addPumpInvalidTank() {
     FuelSys obj;
     int invalidTank = 70;  // A tank that does not exist within the fuel system
     int pumpID = 1; // Arbitrary value for pumpID used to create a pump
@@ -372,8 +370,6 @@ bool Tester::invalidTank() {
 }
 
 bool Tester::removeMultiplePumps() {
-    // It removes multiple pumps from some of the tanks.
-
     // Populate the list with tanks.
     FuelSys obj;
     for (int tankID = 0; tankID < 70; tankID++) {
@@ -398,6 +394,40 @@ bool Tester::removeMultiplePumps() {
     }
 
     cout << "Success: Multiple pumps were removed successfully from multiple tanks" << endl;
+    return true;
+}
+
+bool Tester::removePumpInvalid() {
+    // Populate the list with tanks.
+    FuelSys obj;
+    for (int tankID = 0; tankID < 70; tankID++) {
+        obj.addTank(tankID, 2000, 500);
+    }
+
+    // Add sixty pumps to each tank
+    for (int tankID = 0; tankID < 70; tankID++) {
+        for (int pumpID = 0, targetTank = 1; pumpID < 60; pumpID++, targetTank++) {
+            obj.addPump(tankID, pumpID, targetTank);
+        }
+    }
+
+    // Attempt to remove a pump that does not exist. It should return false.
+    int invalidPump = 100; // Arbitrary invalid value for pumpID
+    int validTank = 10; // Arbitrary valid value for tankID
+    if (obj.removePump(invalidPump, validTank) == true) {
+        cout << "Error: Function did not guard against a non-existent pump" << endl;
+        return false;
+    }
+
+    // Attempt to remove a tank that does not exist. It should return false.
+    int invalidTank = 90;
+    int validPump = 5;
+    if (obj.removePump(validPump, invalidTank) == true) {
+        cout << "Error: Function did not guard against a non-existent tank" << endl;
+        return false;
+    }
+
+    cout << "Success: The function safely guarded against a non-existent pump and a non-existent tank" << endl;
     return true;
 }
 
@@ -462,12 +492,15 @@ int main() {
     test.addDuplicatePump();
 
     cout << "3. Attempting to add a pump to a non-existent tank" << endl;
-    test.invalidTank();
+    test.addPumpInvalidTank();
 
 
     // 7. Testing removePump function
     cout << endl << "====== Testing removePump() ======" << endl;
     cout << "1. Removing multiple pumps from tanks" << endl;
     test.removeMultiplePumps();
+    cout << "2. Attempting to remove a non-existent pump from a non-existent tank" << endl;
+    test.removePumpInvalid();
+
 
 }
