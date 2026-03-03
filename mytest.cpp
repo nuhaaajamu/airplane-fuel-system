@@ -22,11 +22,9 @@ public:
     bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system
 
     // Tests for addPump()
-    bool multiplePumps(); // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
-    bool duplicatePumps(); // Tests whether the function guards against a pump with a duplicate pumpID (error case)
-
-    // Another error case would be adding a pump to a tank that does not exist.
-
+    bool addMultiplePumps(); // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
+    bool addDuplicatePump(); // Tests whether the function guards against a pump with a duplicate pumpID (error case)
+    bool invalidTank(); // Tests how function handles adding a pump to a non-existent tank
 };
 
 bool Tester::addTankEmpty(){
