@@ -282,89 +282,73 @@ int FuelSys::totalFuel() const{
 }
 
 bool FuelSys::drain(int tankID, int pumpID, int fuel){
-    // Determine if a pump exists and if so retrieve the ID of our target tank.
-
-    // If there are no pumps, then there is no target tank.
-    bool foundPump = false;
-    Pump * currentPump = m_current->m_next->m_pumps;
-    if (currentPump == nullptr) {
+    // If the list is empty, there is nothing to drain.
+    if (m_current == nullptr) {
         return false;
     }
 
-    // Check if the pump we are looking for is the head of the list.
-    int targetTankID = 0;
-    if (currentPump->m_pumpID == pumpID) {
-        targetTankID = currentPump->m_target;
-        foundPump = true;
-
-    // Check all other pumps in the list.
-    }else {
-        while (currentPump != nullptr && foundPump == false) {
-            if (currentPump->m_pumpID == pumpID) {
-                targetTankID = currentPump->m_target;
-                foundPump = true;
-            }
-            currentPump = currentPump->m_next;
-        }
-    }
-
-    // Ensure that the target ID was found before adding fuel.
-    if (foundPump != true) {
+    // Just to be safe.
+    if (fuel < 0) {
         return false;
     }
 
-    // Rotate the list so that the first element is the target tank.
-    if (findTank(targetTankID) != true) {
-        return false;
-    }
-
-    // Store data about target tank before findTank() function call which will change m_current.
-    Tank * targetTank = m_current->m_next;
-    int targetFuel = targetTank->m_tankFuel; // Amount of fuel currently.
-    int targetCapacity = targetTank->m_tankCapacity; // Maximum amount of fuel the tank can store.
-    int leftToFill = targetCapacity - targetFuel; // How much fuel left to fill the tank.
-
-    // Check that the source tank exists. findTank() rotates the list so that the first node is the source tank.
+    // First, rotate the list so that the source tank is the first tank.
     if (findTank(tankID) == false) {
         return false;
     }
 
-    // Fill the target tank.
+    // Determine if a pump exists and if so retrieve the ID of our target tank.
     Tank * sourceTank = m_current->m_next;
+
+    // If there are no pumps, then there is no target tank.
+    Pump * currentPump = sourceTank->m_pumps;
+    if (currentPump == nullptr) {
+        return false;
+    }
+
+    bool foundPump = false;
+    int targetTankID = 0;
+
+    // Look for the pump in the source tank's pump list.
+    while (currentPump != nullptr && foundPump == false) {
+        if (currentPump->m_pumpID == pumpID) {
+            targetTankID = currentPump->m_target;
+            foundPump = true;
+        }
+        currentPump = currentPump->m_next;
+    }
+
+    // Ensure that the pump was found before continuing.
+    if (foundPump == false) {
+        return false;
+    }
+
+    // Rotate the list so that the first element is the target tank.
+    if (findTank(targetTankID) == false) {
+        return false;
+    }
+
+    Tank * targetTank = m_current->m_next;
+
+    int targetFuel = targetTank->m_tankFuel;               // Amount of fuel currently.
+    int targetCapacity = targetTank->m_tankCapacity;       // Maximum amount of fuel the tank can store.
+    int leftToFill = targetCapacity - targetFuel;          // How much fuel left to fill the tank.
+
     int sourceFuel = sourceTank->m_tankFuel;
 
-    if (sourceFuel <= fuel) {
-        // If the source tank is less than what the target tank can receive, the source is emptied out.
-        if (sourceFuel <= leftToFill) {
-            targetTank->m_tankFuel += sourceFuel;
-            sourceTank->m_tankFuel = 0;
-            return true;
-        }
-
-        // If the source tank contains more than what we can receive, the target tank reaches its maximum.
-        if (sourceFuel > leftToFill) {
-            targetTank->m_tankFuel = targetCapacity;
-            sourceTank->m_tankFuel -= leftToFill;
-            return true;
-        }
-
-    // Executes when the amount of fuel requested is less than the amount of fuel the source tank stores.
-    }else {
-
-        // If the amount of fuel requested is less than what we can receive, we simply just add the fuel to the target tank and the source tank is updated.
-        if (fuel <= leftToFill) {
-            targetTank->m_tankFuel += fuel;
-            sourceTank->m_tankFuel -= fuel;
-            return true;
-        }
-
-        // If the amount of fuel requested is more than what we can receive, the target tank reaches its maximum and the source tank is updated.
-        if (fuel > leftToFill) {
-            targetTank->m_tankFuel = targetCapacity;
-            sourceTank->m_tankFuel -= leftToFill;
-            return true;
-        }
+    // We can only transfer as much as the source has, and as much as the target can take.
+    int transferFuel = fuel;
+    if (transferFuel > sourceFuel) {
+        transferFuel = sourceFuel;
     }
+    if (transferFuel > leftToFill) {
+        transferFuel = leftToFill;
+    }
+
+    targetTank->m_tankFuel += transferFuel;
+    sourceTank->m_tankFuel -= transferFuel;
+
+    return true;
 }
 
 bool FuelSys::fill(int tankID, int fuel){
