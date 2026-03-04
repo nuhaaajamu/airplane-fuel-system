@@ -283,12 +283,7 @@ int FuelSys::totalFuel() const{
 
 bool FuelSys::drain(int tankID, int pumpID, int fuel){
     // If the list is empty, there is nothing to drain.
-    if (m_current == nullptr) {
-        return false;
-    }
-
-    // Just to be safe.
-    if (fuel < 0) {
+    if (m_current == nullptr || fuel < 0) {
         return false;
     }
 
@@ -321,6 +316,11 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
     // Ensure that the pump was found before continuing.
     if (foundPump == false) {
         return false;
+    }
+
+    // If the target tank is the same as the source tank, nothing needs to happen.
+    if (targetTankID == tankID) {
+        return true;
     }
 
     // Rotate the list so that the first element is the target tank.
