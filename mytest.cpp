@@ -548,7 +548,7 @@ bool Tester::drainError() {
     {
         FuelSys obj;
         if (obj.drain(1, 1, 100) != false) {
-            cout << "Error: drain() returned true for an empty system" << endl;
+            cout << "Error: drain() returned true for an empty fuel system" << endl;
             return false;
         }
     }
@@ -590,6 +590,46 @@ bool Tester::drainError() {
     }
 
     cout << "Success: drain() safely guarded against error cases" << endl;
+    return true;
+}
+
+bool Tester::assignmentOperator() {
+    FuelSys rhs;
+    rhs.addTank(1, 2000, 500);
+    rhs.addTank(2, 2000, 0);
+    rhs.addPump(1, 5, 2);
+
+    FuelSys lhs;
+    lhs.addTank(10, 2000, 100);
+    lhs.addTank(11, 2000, 200);
+
+    // Do the assignment
+    lhs = rhs;
+
+    // Ensure that totals match
+    if (lhs.totalFuel() != rhs.totalFuel()) {
+        cout << "Error: totalFuel() does not match after assignment" << endl;
+        return false;
+    }
+
+    // Now mutate rhs and make sure lhs does not change (check that a deep copy was made)
+    // Remove pump from rhs, then rhs should fail drain but lhs should still succeed.
+    if (rhs.removePump(1, 5) == false) {
+        cout << "Error: removePump() failed on rhs during assignment test" << endl;
+        return false;
+    }
+
+    if (rhs.drain(1, 5, 100) != false) {
+        cout << "Error: rhs drain() succeeded even though pump was removed" << endl;
+        return false;
+    }
+
+    if (lhs.drain(1, 5, 100) == false) {
+        cout << "Error: lhs drain() failed after rhs pump removal (deep copy failed)" << endl;
+        return false;
+    }
+
+    cout << "Success: a deep copy was made" << endl;
     return true;
 }
 
