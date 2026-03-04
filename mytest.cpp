@@ -446,6 +446,38 @@ bool Tester::removePumpInvalid() {
     return true;
 }
 
+bool Tester::removeTankError() {
+    FuelSys obj;
+
+    // Populate the fuel system with tanks 0-9
+    for (int i = 0; i < 10; i++) {
+        obj.addTank(i, 2000, 500);
+    }
+
+    int expectedTotal = 10 * 500;
+
+    // Try removing a tank that does not exist
+    if (obj.removeTank(50) != false) {
+        cout << "Error: removeTank() returned true for a non-existent tank" << endl;
+        return false;
+    }
+
+    // Make sure nothing changed (a simple way is checking total fuel)
+    if (obj.totalFuel() != expectedTotal) {
+        cout << "Error: totalFuel() changed after trying to remove a non-existent tank" << endl;
+        return false;
+    }
+
+    // Also ensure the system still has tanks
+    if (obj.m_current == nullptr) {
+        cout << "Error: m_current became nullptr after trying to remove a non-existent tank" << endl;
+        return false;
+    }
+
+    cout << "Success: removeTank() safely guarded against removing a non-existent tank" << endl;
+    return true;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
