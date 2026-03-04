@@ -172,6 +172,11 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
         return false;
     }
 
+    // Check that the pumpID is valid.
+    if (pumpID < 0) {
+        return false;
+    }
+
     // Ensure that the pumpID is unique.
     Pump * currentPump = m_current->m_next->m_pumps;
     while (currentPump != nullptr) {
