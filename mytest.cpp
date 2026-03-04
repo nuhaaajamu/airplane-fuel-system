@@ -185,62 +185,38 @@ bool Tester::validateInputEdge() {
 }
 
 bool Tester::removeAll() {
-    FuelSys obj1;
-    vector <int> objID{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    FuelSys obj;
 
-    // Populate the fuel system.
+    // Populate the fuel system with tanks 0-9
     for (int i = 0; i < 10; i++) {
-        obj1.addTank(i, 2000, 500);
-    }
-
-    // Remove tanks one by one.
-    for (int j = 10; j >= 0; j--) {
-        bool result = obj1.removeTank(j);
-        objID.pop_back();
-
-        // Test value of remove function
-        if (result == false) {
-            cout << "removeTank() returned false (tank " << j << ")" << endl;
+        if (obj.addTank(i, 2000, 500) == false) {
+            cout << "Error: Tank " << i << " was not added successfully" << endl;
             return false;
         }
-
-        // Search for ID and see if it still exists.
-        if (obj1.findTank(j) == true) {
-            cout << "The tank ID still exists in the linked list (tank " << j << ")" << endl;
-        }
-
-
-        // Ensure that list order was preserved after removal
-        Tank * traverse = obj1.m_current;
-        for (int k = 0; k < 10; k++) {
-
-        }
-
-        do {
-            if (j == traverse->m_tankID) {
-                return false;
-            }
-            traverse = traverse->m_next;
-
-        }while (traverse != obj1.m_current->m_next);
-
-
-        // Update vector to reflect removal.
-
-
-        // Check m_current for case in which we remove last tank.
-
     }
 
-    if (obj1.removeTank(0) == false) {
-        cout << "Tank 0 was not successfully removed." << endl;
+    // Remove every tanks 0-9
+    for (int i = 0; i < 10; i++) {
+        if (obj.removeTank(i) == false) {
+            cout << "Error: Tank " << i << " was not successfully removed" << endl;
+            return false;
+        }
+    }
+
+    // After removing all tanks, m_current should be nullptr.
+    if (obj.m_current != nullptr) {
+        cout << "Error: m_current is not nullptr after removing all tanks" << endl;
         return false;
     }
 
-    // Test value of remove function
+    // Also, totalFuel should be 0 now.
+    if (obj.totalFuel() != 0) {
+        cout << "Error: totalFuel() is not zero after removing all tanks" << endl;
+        return false;
+    }
 
-    // Determine whether size of list decreased.
-
+    cout << "Success: All tanks were removed successfully" << endl;
+    return true;
 }
 
 bool Tester::calculateFuelEmpty() {
@@ -450,18 +426,18 @@ bool Tester::removePumpInvalid() {
         }
     }
 
-    // Attempt to remove a pump that does not exist. It should return false.
-    int invalidPump = 100; // Arbitrary invalid value for pumpID
-    int validTank = 10; // Arbitrary valid value for tankID
-    if (obj.removePump(invalidPump, validTank) == true) {
+    // Attempt to remove a pump that does not exist (valid tank, invalid pump).
+    int invalidPump = 100;
+    int validTank = 10;
+    if (obj.removePump(validTank, invalidPump) == true) {
         cout << "Error: Function did not guard against a non-existent pump" << endl;
         return false;
     }
 
-    // Attempt to remove a tank that does not exist. It should return false.
+    // Attempt to remove a pump from a tank that does not exist.
     int invalidTank = 90;
     int validPump = 5;
-    if (obj.removePump(validPump, invalidTank) == true) {
+    if (obj.removePump(invalidTank, validPump) == true) {
         cout << "Error: Function did not guard against a non-existent tank" << endl;
         return false;
     }
