@@ -560,12 +560,23 @@ bool Tester::drainError() {
     // Case 2: destination tank does not exist
     {
         FuelSys obj;
-        obj.addTank(1, 2000, 500);   // source exists
+        obj.addTank(1, 2000, 500);   // source tank exists
 
-        // Add a pump that targets a tank that doesn't exist
-        obj.addTank(99, 2000, 0);
-        obj.addPump(1, 5, 99);
-        obj.removeTank(99);
+        // We temporarily create the target tank just so addPump() is allowed to succeed.
+        if (obj.addTank(99, 2000, 0) == false) {
+            cout << "Error: setup failed (could not add temporary target tank)" << endl;
+            return false;
+        }
+
+        if (obj.addPump(1, 5, 99) == false) {
+            cout << "Error: setup failed (could not add pump that points to temporary target tank)" << endl;
+            return false;
+        }
+
+        if (obj.removeTank(99) == false) {
+            cout << "Error: setup failed (could not remove temporary target tank)" << endl;
+            return false;
+        }
 
         if (obj.drain(1, 5, 100) != false) {
             cout << "Error: drain() returned true for a non-existent tank" << endl;
