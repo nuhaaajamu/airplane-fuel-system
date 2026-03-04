@@ -339,8 +339,6 @@ bool Tester::addMultiplePumps() {
     return true;
 }
 
-
-
 bool Tester::addDuplicatePump() {
     // Populate the list with tanks.
     FuelSys obj;
@@ -425,7 +423,7 @@ bool Tester::removePumpInvalid() {
         obj.addTank(tankID, 2000, 500);
     }
 
-    // Add sixty pumps to each tank
+    // Add sixty pumps to each tank.
     for (int tankID = 0; tankID < 70; tankID++) {
         for (int pumpID = 0, targetTank = 1; pumpID < 60; pumpID++, targetTank++) {
             obj.addPump(tankID, pumpID, targetTank);
@@ -455,26 +453,26 @@ bool Tester::removePumpInvalid() {
 bool Tester::removeTankError() {
     FuelSys obj;
 
-    // Populate the fuel system with tanks 0-9
+    // Populate the fuel system with tanks 0-9.
     for (int i = 0; i < 10; i++) {
         obj.addTank(i, 2000, 500);
     }
 
     int expectedTotal = 10 * 500;
 
-    // Try removing a tank that does not exist
+    // Try removing a tank that does not exist.
     if (obj.removeTank(50) != false) {
         cout << "Error: removeTank() returned true for a non-existent tank" << endl;
         return false;
     }
 
-    // Make sure nothing changed (a simple way is checking total fuel)
+    // Make sure nothing changed.
     if (obj.totalFuel() != expectedTotal) {
         cout << "Error: totalFuel() changed after trying to remove a non-existent tank" << endl;
         return false;
     }
 
-    // Also ensure the system still has tanks
+    // Also ensure the system still has tanks.
     if (obj.m_current == nullptr) {
         cout << "Error: m_current became nullptr after trying to remove a non-existent tank" << endl;
         return false;
@@ -510,7 +508,7 @@ bool Tester::drainNormal() {
         int targetFuel = obj.m_current->m_next->m_tankFuel;
 
         if (sourceFuel != 600 || targetFuel != 400) {
-            cout << "Error: drain() transferred the wrong amount (fit case)" << endl;
+            cout << "Error: drain() transferred the wrong amount" << endl;
             return false;
         }
     }
@@ -520,7 +518,7 @@ bool Tester::drainNormal() {
         FuelSys obj;
 
         obj.addTank(1, 2000, 1000); // source
-        obj.addTank(2, 2000, 1900); // target (only 100 space left)
+        obj.addTank(2, 2000, 1900); // target (only 100kg space left)
 
         if (obj.addPump(1, 7, 2) == false) {
             cout << "Error: addPump() failed for drain overflow case" << endl;
@@ -540,7 +538,7 @@ bool Tester::drainNormal() {
 
         // Target should cap at 2000, and source should lose only 100
         if (sourceFuel != 900 || targetFuel != 2000) {
-            cout << "Error: drain() transferred the wrong amount (overflow case)" << endl;
+            cout << "Error: drain() transferred the wrong amount" << endl;
             return false;
         }
     }
@@ -550,7 +548,7 @@ bool Tester::drainNormal() {
 }
 
 bool Tester::drainError() {
-    // Case 1: empty system
+    // Case 1: empty fuel system
     {
         FuelSys obj;
         if (obj.drain(1, 1, 100) != false) {
@@ -559,13 +557,18 @@ bool Tester::drainError() {
         }
     }
 
-    // Case 2: source tank does not exist
+    // Case 2: destination tank does not exist
     {
         FuelSys obj;
-        obj.addTank(2, 2000, 500);
+        obj.addTank(1, 2000, 500);   // source exists
 
-        if (obj.drain(99, 1, 100) != false) {
-            cout << "Error: drain() returned true for a non-existent source tank" << endl;
+        // Add a pump that targets a tank that doesn't exist
+        obj.addTank(99, 2000, 0);
+        obj.addPump(1, 5, 99);
+        obj.removeTank(99);
+
+        if (obj.drain(1, 5, 100) != false) {
+            cout << "Error: drain() returned true for a non-existent tank" << endl;
             return false;
         }
     }
@@ -609,7 +612,7 @@ bool Tester::assignmentOperator() {
     lhs.addTank(10, 2000, 100);
     lhs.addTank(11, 2000, 200);
 
-    // Do the assignment
+    // Perform assignment
     lhs = rhs;
 
     // Ensure that totals match
