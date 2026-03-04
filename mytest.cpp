@@ -318,6 +318,9 @@ bool Tester::addMultiplePumps() {
             }
         }
 
+        // Make sure we are positioned at the correct tank before counting
+        obj.findTank(tankID);
+
         // Check that the number of pumps in the tank reflects the number of pumps that were added.
         int count = 0;
         Pump * currentPump = obj.m_current->m_next->m_pumps;
@@ -325,6 +328,7 @@ bool Tester::addMultiplePumps() {
             count++;
             currentPump = currentPump->m_next;
         }
+
         if (count != 50) {
             cout << "Error: Only " << count << "/50 pumps were added to the tank" << endl;
             return false;
@@ -334,6 +338,8 @@ bool Tester::addMultiplePumps() {
     cout << "Success: All pumps were successfully added to each tank" << endl;
     return true;
 }
+
+
 
 bool Tester::addDuplicatePump() {
     // Populate the list with tanks.
