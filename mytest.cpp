@@ -347,6 +347,7 @@ bool Tester::addMultiplePumps() {
         Pump * currentPump = obj.m_current->m_next->m_pumps;
         while (currentPump != nullptr) {
             count++;
+            currentPump = currentPump->m_next;
         }
         if (count != 50) {
             cout << "Error: Only " << count << "/50 pumps were added to the tank" << endl;
