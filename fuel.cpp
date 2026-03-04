@@ -1,13 +1,38 @@
 #include "fuel.h"
 
-
 FuelSys::FuelSys() : m_current(nullptr) {}
 
-
 FuelSys::~FuelSys(){
+    // First, ensure that a tank exists.
+    if (m_current == nullptr) {
+        return;
+    }
 
+    Tank * currentTank = m_current->m_next;
+    m_current->m_next = nullptr; // Modify the list to become a forward list instead of circular. This allows us to use nullptr as indication of the end of the list.
+    Tank * nextTank = nullptr;
+
+    while (currentTank != nullptr){
+        // The pumps need to be de-allocated before the tank is.
+        Pump * currentPump = currentTank->m_pumps;
+
+        // Only de-allocate pumps if at least one exists.
+        if (currentPump != nullptr) {
+            Pump * nextPump = nullptr;
+
+            while (currentPump != nullptr) {
+                nextPump = currentPump->m_next;
+                delete currentPump;
+                currentPump = nextPump;
+            }
+        }
+
+        // After all pumps have been de-allocated, de-allocate the tank.
+        nextTank = currentTank->m_next;
+        delete currentTank;
+        currentTank = nextTank;
+    }
 }
-
 
 bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
     // Validate the fuel and capacity for the tank.
@@ -57,7 +82,6 @@ bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
     }
 }
 
-
 bool FuelSys::removeTank(int tankID){
     bool foundID = false; // Tracks whether a match is found.
 
@@ -103,7 +127,6 @@ bool FuelSys::removeTank(int tankID){
 
     return true;
 }
-
 
 bool FuelSys::findTank(int tankID){
     bool foundTank = false; // Tracks whether a match is found.
@@ -163,7 +186,6 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
     head = newPump;
     return true;
 }
-
 
 bool FuelSys::removePump(int tankID, int pumpID){
     // Ensure that the tank we are removing a pump from exists.
@@ -313,7 +335,6 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
     }
 }
 
-
 bool FuelSys::fill(int tankID, int fuel){
     // Look for the tank we want to fill and ensure that it exists. Rotate the list so that the tank is in the first position. (m_current->m_next)
     if (findTank(tankID) == false) {
@@ -336,11 +357,9 @@ bool FuelSys::fill(int tankID, int fuel){
     }
 }
 
-
 const FuelSys & FuelSys::operator=(const FuelSys & rhs){
 
 }
-
 
 void FuelSys::dumpSys() const{
     // This function prints out the list of tanks along with the amount of current fuel in the tank and the list of its pumps to the standard output.
@@ -365,7 +384,6 @@ void FuelSys::dumpSys() const{
     else
         cout << "There is no tank in the system!\n\n";
 }
-
 
 void FuelSys::dumpPumps(Pump* pumps) const{
     // this traverses the linked list to the end
