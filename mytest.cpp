@@ -303,7 +303,7 @@ bool Tester::findTankNormal() {
     return true;
 }
 
-bool findTankError() {
+bool Tester::findTankError() {
     // Populate the list with tanks.
     FuelSys obj;
     for (int ID = 0; ID < 50; ID++) {
