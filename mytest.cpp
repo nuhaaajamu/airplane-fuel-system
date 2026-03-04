@@ -305,11 +305,16 @@ bool Tester::addMultiplePumps() {
 
     // Add pumps to each tank and evaluate whether they were successfully added for each addition.
     for (int tankID = 0; tankID < 3; tankID++) {
+
         for (int pumpID = 0, targetTank = 1; pumpID < 50; pumpID++, targetTank++) {
+
             if (obj.addPump(tankID, pumpID, targetTank) == false) {
                 cout << "Error: Pump (" << pumpID << ") was not able to be added to tank (" << tankID << ")" << endl;
                 return false;
             }
+
+            // Ensure we are positioned at the correct tank before checking the head
+            obj.findTank(tankID);
 
             // Check that the head of the list was updated to store the added pump.
             if (obj.m_current->m_next->m_pumps->m_pumpID != pumpID) {
@@ -324,6 +329,7 @@ bool Tester::addMultiplePumps() {
         // Check that the number of pumps in the tank reflects the number of pumps that were added.
         int count = 0;
         Pump * currentPump = obj.m_current->m_next->m_pumps;
+
         while (currentPump != nullptr) {
             count++;
             currentPump = currentPump->m_next;
@@ -654,61 +660,172 @@ bool Tester::assignmentOperator() {
 }
 
 int main() {
-    // 1. Test addTank function
-    cout << "======= Testing addTank() =======" << endl;
     Tester test;
-    // Ensure that a tank is added successfully to an empty list.
+    int passed = 0;
+    int failed = 0;
+    bool result = false;
+
+    // Test addTank()
+    cout << "======= Testing addTank() =======" << endl;
+
     cout << endl << "1. Inserting a tank in an empty list" << endl;
-    test.addTankEmpty();
-    // Ensure that multiple can be added in the intended order.
+    result = test.addTankEmpty();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
     cout << endl << "2. Inserting multiple tanks consecutively" << endl;
-    test.addMultipleTanks();
-    // Ensure that input passed in is validated properly.
+    result = test.addMultipleTanks();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
     cout << endl << "3. Checking error cases for input" << endl;
-    test.validateInputError();
+    result = test.validateInputError();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
     cout << endl << "4. Checking edge cases for valid input" << endl;
-    test.validateInputEdge();
+    result = test.validateInputEdge();
+    if (result == true)
+        passed++;
+    else
+        failed++;
 
 
-    // 2. Test removeTank function
+    // Test removeTank()
     cout << endl << "====== Testing removeTank() ======" << endl;
-    // Ensure that each tank in a list is removed properly. Should return true for each removal.
+
     cout << endl << "1. Removing all tanks from a fuel system containing ten tanks" << endl;
-    test.removeAll();
+    result = test.removeAll();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "2. Attempting to remove a non-existent tank" << endl;
+    result = test.removeTankError();
+    if (result == true)
+        passed++;
+    else
+        failed++;
 
 
-
-
-    // 4. Test totalFuel function
-    cout << endl << "====== Testing totalFuel() ======" << endl;
-    cout << "1. Calculating total fuel for a non-existent tank" << endl;
-    test.calculateFuelEmpty();
-    cout << "2. Calculating total fuel for a fuel system containing three tanks" << endl;
-    test.calculateFuel();
-
-
-    // 5. Test findTank function
+    // Test findTank()
     cout << endl << "====== Testing findTank() ======" << endl;
-    cout << "1. Adding fifty tanks to a fuel system and finding each of them" << endl;
-    test.findTankNormal();
-    cout << "2. Searching for a non-existent tank in a fuel system" << endl;
-    test.findTankError();
+
+    cout << endl << "1. Adding fifty tanks to a fuel system and finding each of them" << endl;
+    result = test.findTankNormal();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "2. Searching for a non-existent tank in a fuel system" << endl;
+    result = test.findTankError();
+    if (result == true)
+        passed++;
+    else
+        failed++;
 
 
-    // 6. Testing addPump function
+    // Test addPump()
     cout << endl << "====== Testing addPump() ======" << endl;
-    cout << "1. Adding multiple pumps to multiple tanks" << endl;
-    test.addMultiplePumps();
-    cout << "2. Adding a duplicate pump to a tank" << endl;
-    test.addDuplicatePump();
-    cout << "3. Attempting to add a pump to a non-existent tank" << endl;
-    test.addPumpInvalidTank();
+
+    cout << endl << "1. Adding multiple pumps to multiple tanks" << endl;
+    result = test.addMultiplePumps();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "2. Adding a duplicate pump to a tank" << endl;
+    result = test.addDuplicatePump();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "3. Attempting to add a pump to a non-existent tank" << endl;
+    result = test.addPumpInvalidTank();
+    if (result == true)
+        passed++;
+    else
+        failed++;
 
 
-    // 7. Testing removePump function
+    // Test removePump()
     cout << endl << "====== Testing removePump() ======" << endl;
-    cout << "1. Removing multiple pumps from tanks" << endl;
-    test.removeMultiplePumps();
-    cout << "2. Attempting to remove a non-existent pump from a non-existent tank" << endl;
-    test.removePumpInvalid();
+
+    cout << endl << "1. Removing multiple pumps from tanks" << endl;
+    result = test.removeMultiplePumps();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "2. Attempting to remove a non-existent pump and a non-existent tank" << endl;
+    result = test.removePumpInvalid();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+
+    // Test totalFuel()
+    cout << endl << "====== Testing totalFuel() ======" << endl;
+
+    cout << endl << "1. Calculating total fuel for an empty fuel system" << endl;
+    result = test.calculateFuelEmpty();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "2. Calculating total fuel for a fuel system containing three tanks" << endl;
+    result = test.calculateFuel();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+
+    // Test drain()
+    cout << endl << "====== Testing drain() ======" << endl;
+
+    cout << endl << "1. Testing for normal cases" << endl;
+    result = test.drainNormal();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+    cout << endl << "2. Testing for error cases" << endl;
+    result = test.drainError();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+
+    // Test overloaded assignment operator
+    cout << endl << "====== Testing operator= ======" << endl;
+
+    cout << endl << "1. Determining if the assignment operator makes a deep or shallow copy" << endl;
+    result = test.assignmentOperator();
+    if (result == true)
+        passed++;
+    else
+        failed++;
+
+
+    cout << endl;
+    cout << "======= TEST SUMMARY =======" << endl;
+    cout << "Passed: " << passed << endl;
+    cout << "Failed: " << failed << endl;
+    return 0;
 }
