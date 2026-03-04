@@ -32,6 +32,8 @@ FuelSys::~FuelSys(){
         delete currentTank;
         currentTank = nextTank;
     }
+
+    m_current = nullptr;
 }
 
 bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
@@ -358,7 +360,45 @@ bool FuelSys::fill(int tankID, int fuel){
 }
 
 const FuelSys & FuelSys::operator=(const FuelSys & rhs){
+    // Check for self-assignment.
+    if (this == &rhs) {
+        return *this;
+    }
 
+    // If the lhs contains a tank, clear the object.
+    if (m_current != nullptr) {
+        Tank * currentTank = m_current->m_next;
+        m_current->m_next = nullptr; // Modify the list to become a forward list instead of circular. This allows us to use nullptr as indication of the end of the list.
+        Tank * nextTank = nullptr;
+
+        while (currentTank != nullptr){
+            // The pumps need to be de-allocated before the tank is.
+            Pump * currentPump = currentTank->m_pumps;
+
+            // Only de-allocate pumps if at least one exists.
+            if (currentPump != nullptr) {
+                Pump * nextPump = nullptr;
+
+                while (currentPump != nullptr) {
+                    nextPump = currentPump->m_next;
+                    delete currentPump;
+                    currentPump = nextPump;
+                }
+            }
+
+            // After all pumps have been de-allocated, de-allocate the tank.
+            nextTank = currentTank->m_next;
+            delete currentTank;
+            currentTank = nextTank;
+        }
+
+        m_current = nullptr;
+    }
+
+    // Now, make a deep copy of the tanks from the rhs to lhs.
+
+
+    // Next, make a deep copy of all the pumps from the rhs to lhs.
 }
 
 void FuelSys::dumpSys() const{
