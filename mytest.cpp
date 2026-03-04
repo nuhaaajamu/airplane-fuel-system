@@ -10,24 +10,24 @@ public:
 
 
     // Tests for removeTank()
-    bool removeAll();           // Tests whether all tanks are removed correctly.
-    bool removeTankError();     // Tests if a non-existent tank can be removed (error case)
+    bool removeAll();            // Tests whether all tanks are removed correctly.
+    bool removeTankError();      // Tests if a non-existent tank can be removed (error case)
 
 
     // Tests for totalFuel()
-    bool calculateFuelEmpty();  // Tests fuel amount for when no tank exists, should return zero (error case)
-    bool calculateFuel();       // Tests if total is calculated accurately (normal case)
+    bool calculateFuelEmpty();   // Tests fuel amount for when no tank exists, should return zero (error case)
+    bool calculateFuel();        // Tests if total is calculated accurately (normal case)
 
 
     // Tests for findTank()
-    bool findTankNormal();     // Tests whether it works correctly for a normal case
-    bool findTankError();      // Tests whether the function accounts for a tank that does not exist in the fuel system
+    bool findTankNormal();      // Tests whether it works correctly for a normal case
+    bool findTankError();       // Tests whether the function accounts for a tank that does not exist in the fuel system
 
 
     // Tests for addPump()
-    bool addMultiplePumps();   // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
-    bool addDuplicatePump();   // Tests whether the function guards against a pump with a duplicate pumpID (error case)
-    bool addPumpInvalidTank(); // Tests how function handles adding a pump to a non-existent tank
+    bool addMultiplePumps();    // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
+    bool addDuplicatePump();    // Tests whether the function guards against a pump with a duplicate pumpID (error case)
+    bool addPumpInvalidTank();  // Tests how function handles adding a pump to a non-existent tank
 
 
     // Tests for removePump()
@@ -667,8 +667,6 @@ int main() {
         passed++;
     else
         failed++;
-
-
 
 
     // Test removeTank()
