@@ -167,7 +167,8 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
         return false;
     }
 
-    // Find the tank that we are adding a pump to and ensure that it exists. This rotates the list so that the tank is the "first tank" in the list (m_current->m_next)
+    // Find the tank that we are adding a pump to and ensure that it exists.
+    // This rotates the list so that the tank is the "first tank" in the list (m_current->m_next)
     if (findTank(tankID) == false) {
         return false;
     }
@@ -183,14 +184,17 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
         if (currentPump->m_pumpID == pumpID) {
             return false;
         }
-
         currentPump = currentPump->m_next;
     }
 
     // Add the pump to the tank.
+    // The pump should be added to the head of the list.
     Pump * head = m_current->m_next->m_pumps;
-    Pump * newPump = new Pump(tankID, targetTank, head);
-    head = newPump;
+    Pump * newPump = new Pump(pumpID, targetTank, head);
+
+    // This is the part that actually attaches it to the tank's pump list.
+    m_current->m_next->m_pumps = newPump;
+
     return true;
 }
 
