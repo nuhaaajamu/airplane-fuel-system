@@ -195,7 +195,7 @@ bool Tester::removeAll() {
         }
     }
 
-    // Remove every tanks 0-9
+    // Remove every tank 0-9
     for (int i = 0; i < 10; i++) {
         if (obj.removeTank(i) == false) {
             cout << "Error: Tank " << i << " was not successfully removed" << endl;
