@@ -243,7 +243,7 @@ bool Tester::removeAll() {
 
 }
 
-bool calculateFuelEmpty() {
+bool Tester::calculateFuelEmpty() {
     FuelSys obj;
     int result = obj.totalFuel();
 
@@ -252,11 +252,12 @@ bool calculateFuelEmpty() {
         return true;
     }
 
-    cout << "Error: total fuel calculated for a non-existent tank is not zero";
+    cout << "Error: total fuel calculated for a non-existent tank is not zero" << endl;
     return false;
 }
 
-bool calculateFuel() {
+
+bool Tester::calculateFuel() {
     FuelSys obj;
     int expectedTotal = 600;
 
@@ -264,7 +265,7 @@ bool calculateFuel() {
     obj.addTank(2, 2000, 200);
     obj.addTank(3, 2000, 300);
 
-    bool result = obj.totalFuel();
+    int result = obj.totalFuel();
 
     if (result != expectedTotal) {
         cout << "Error: total fuel was calculated incorrectly" << endl;
