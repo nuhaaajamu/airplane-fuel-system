@@ -1,38 +1,74 @@
+// GENERAL GUIDELINES:
+// The test file name must be mytest.cpp; the file name must be in lower case, a file name like myTest.cpp is not acceptable.
+// The test file must contain the declaration and implementation of your Tester class and the main() function as well as all your test cases, i.e. calls to your test functions.
+// You are responsible for adequately testing your work before submission. The following section presents a non-exhaustive list of tests to perform on your implementation.
+// You must write a separate function for every test case.
+// Every test function must return true/false depending on passing or failing the test. Visual outputs are not accepted as test results.
+// The dump() function should not be called in the test functions. The dump() function is only provided to facilitate debugging.
+// Tests cannot be interactive. The test file mytest.cpp must compile and run to completion.
+//
+//
+// TESTING FUELSYS CLASS:
+// Test whether addTank() works correctly for a normal case, i.e. inserting multiple tanks. We check whether the function returns true for every insertion. And we check whether all nodes are inserted.
+// Test whether addTank() works correctly for an error case. For example, for the error case of insertion we check that the tank with an ID less than zero is not inserted and the function returns false. Another error case would be inserting a duplicate ID.
+// Test whether removeTank() works correctly for a normal case. Create an object with a decent number of tanks and remove all, then check if all are removed correctly and at every removal the function returns true.
+// Test whether removeTank() works correctly for an error case which the removal request is for a non-existing tank.
+// Test whether findTank() works correctly for a normal case. Create an object with a decent number of tanks and search for them, then check if the found tank is the next node of the current node in the list and at every search operation the function returns true.
+// Test whether findTank() works correctly for an error case which the tank does not exist in the list.
+// Test whether totalFuel() works correctly for a normal case. It returns the correct value.
+// Test whether totalFuel() works correctly for an error case. It returns zero where there is no tank in the system.
+// Test whether addPump() works correctly for a normal case. It adds multiple pumps to some of the tanks.
+// Test whether addPump() works correctly for an error case. It does not add a duplicate pump ID to a tank. Another error case would be adding a pump to a tank that does not exist.
+// Test whether removePump() works correctly for a normal case. It removes multiple pumps from some of the tanks.
+// Test whether removePump() works correctly for an error case. That is trying to remove a non-existent pump or trying to remove a pump from a non-existent tank.
+// Test whether drain() works correctly. It transfers the fuel from the source tank to the target tank correctly where the requested fuel is less than the empty space of the target tank. Another case would be when the amount of fuel is more than the empty space of the target tank.
+// Test whether drain() works correctly for the error cases. For example, the source tank or the pump or the destination tank does not exist in the system.
+// Test the overloaded assignment operator.
+
+
 #include "fuel.h"
-#include <vector>
 
 class Tester {
 public:
     // Tests for addTank()
-    bool addTankEmpty(); // Tests if insertion is still successful even when the list is empty
-    bool addMultipleTanks();  // Tests whether each tank is properly added to the end of the list
-    bool validateInputError(); // Tests the error cases of the input passed in (ID, capacity, fuel), should not add a tank
-    bool validateInputEdge(); // Tests the edge cases of the inputs passed in (ID, capacity, fuel), should add a tank
+    bool addTankEmpty();         // Tests if insertion is still successful even when the list is empty
+    bool addMultipleTanks();     // Tests whether each tank is properly added to the end of the list
+    bool validateInputError();   // Tests the error cases of the input passed in (ID, capacity, fuel), should not add a tank
+    bool validateInputEdge();    // Tests the edge cases of the inputs passed in (ID, capacity, fuel), should add a tank
 
 
     // Tests for removeTank()
-    bool removeAll(); // Tests whether all tanks are removed correctly.
+    bool removeAll();           // Tests whether all tanks are removed correctly.
+    bool removeTankError();     // Tests if a non-existent tank can be removed (error case)
 
 
     // Tests for totalFuel()
-    bool calculateFuelEmpty(); // Tests fuel amount for when no tank exists, should return zero (error case)
-    bool calculateFuel(); // Tests if total is calculated accurately (normal case)
+    bool calculateFuelEmpty();  // Tests fuel amount for when no tank exists, should return zero (error case)
+    bool calculateFuel();       // Tests if total is calculated accurately (normal case)
 
 
     // Tests for findTank()
-    bool findTankNormal(); // Tests whether it works correctly for a normal case
-    bool findTankError(); // Tests whether the function accounts for a tank that does not exist in the fuel system
+    bool findTankNormal();     // Tests whether it works correctly for a normal case
+    bool findTankError();      // Tests whether the function accounts for a tank that does not exist in the fuel system
 
 
     // Tests for addPump()
-    bool addMultiplePumps(); // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
-    bool addDuplicatePump(); // Tests whether the function guards against a pump with a duplicate pumpID (error case)
+    bool addMultiplePumps();   // Tests whether the function works correctly when adding multiple pumps to a tank (normal case)
+    bool addDuplicatePump();   // Tests whether the function guards against a pump with a duplicate pumpID (error case)
     bool addPumpInvalidTank(); // Tests how function handles adding a pump to a non-existent tank
 
 
     // Tests for removePump()
     bool removeMultiplePumps(); // Tests whether the function works correctly when removing multiple pumps from a tank (normal case)
-    bool removePumpInvalid(); // Tests whether the function works correctly when there is a non-existent pump or non-existent tank (error case)
+    bool removePumpInvalid();   // Tests whether the function works correctly when there is a non-existent pump or non-existent tank (error case)
+
+
+    // Tests for drain()
+    bool drainNormal();         // Tests fuel transfer (normal case)
+    bool drainError();          // Tests for non-existent tank, non-existent pump, no target (error case)
+
+    // Tests for operator=
+    bool assignmentOperator();  // Tests for deep copy
 };
 
 bool Tester::addTankEmpty(){
