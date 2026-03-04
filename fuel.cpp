@@ -112,10 +112,20 @@ bool FuelSys::removeTank(int tankID){
 
     // Remove the target tank. Since m_current tracks the last tank, only update if the last tank is affected.
     Tank * target = beforeTarget->m_next;
+
     if (m_current == target) {
 
         // If there is only one tank, then we simply just delete it.
         if (m_current->m_next == m_current) {
+
+            // The pumps need to be de-allocated before the tank is.
+            Pump * currentPump = target->m_pumps;
+            while (currentPump != nullptr) {
+                Pump * nextPump = currentPump->m_next;
+                delete currentPump;
+                currentPump = nextPump;
+            }
+
             delete m_current;
             m_current = nullptr;
             return true;
@@ -124,9 +134,18 @@ bool FuelSys::removeTank(int tankID){
         m_current = beforeTarget;
     }
 
+    // Disconnect target from the circular list.
     beforeTarget->m_next = target->m_next;
-    delete target;
 
+    // The pumps need to be de-allocated before the tank is.
+    Pump * currentPump = target->m_pumps;
+    while (currentPump != nullptr) {
+        Pump * nextPump = currentPump->m_next;
+        delete currentPump;
+        currentPump = nextPump;
+    }
+
+    delete target;
     return true;
 }
 
