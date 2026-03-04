@@ -386,22 +386,17 @@ const FuelSys & FuelSys::operator=(const FuelSys & rhs){
     // If the lhs contains a tank, clear the object.
     if (m_current != nullptr) {
         Tank * currentTank = m_current->m_next;
-        m_current->m_next = nullptr; // Modify the list to become a forward list instead of circular. This allows us to use nullptr as indication of the end of the list.
+        m_current->m_next = nullptr; // Modify the list to become a forward list instead of circular.
         Tank * nextTank = nullptr;
 
         while (currentTank != nullptr){
             // The pumps need to be de-allocated before the tank is.
             Pump * currentPump = currentTank->m_pumps;
 
-            // Only de-allocate pumps if at least one exists.
-            if (currentPump != nullptr) {
-                Pump * nextPump = nullptr;
-
-                while (currentPump != nullptr) {
-                    nextPump = currentPump->m_next;
-                    delete currentPump;
-                    currentPump = nextPump;
-                }
+            while (currentPump != nullptr) {
+                Pump * nextPump = currentPump->m_next;
+                delete currentPump;
+                currentPump = nextPump;
             }
 
             // After all pumps have been de-allocated, de-allocate the tank.
@@ -413,10 +408,74 @@ const FuelSys & FuelSys::operator=(const FuelSys & rhs){
         m_current = nullptr;
     }
 
+    // If rhs is empty, then lhs should also be empty.
+    if (rhs.m_current == nullptr) {
+        m_current = nullptr;
+        return *this;
+    }
+
     // Now, make a deep copy of the tanks from the rhs to lhs.
+    // We'll copy starting from the "first tank" in rhs, which is rhs.m_current->m_next.
+    Tank * rhsFirst = rhs.m_current->m_next;
+    Tank * rhsTraverse = rhsFirst;
 
+    Tank * lhsFirst = nullptr;
+    Tank * lhsLast = nullptr;
 
-    // Next, make a deep copy of all the pumps from the rhs to lhs.
+    do {
+        // Create the new tank (pumps will be copied right after).
+        Tank * newTank = new Tank(rhsTraverse->m_tankID, rhsTraverse->m_tankCapacity, rhsTraverse->m_tankFuel);
+        newTank->m_next = nullptr;
+        newTank->m_pumps = nullptr;
+
+        // Build the forward list first, then we will connect it into a circle at the end.
+        if (lhsFirst == nullptr) {
+            lhsFirst = newTank;
+        } else {
+            lhsLast->m_next = newTank;
+        }
+        lhsLast = newTank;
+
+        // If rhsTraverse is the cursor in rhs, then this newTank should be the cursor in lhs.
+        if (rhsTraverse == rhs.m_current) {
+            m_current = newTank;
+        }
+
+        // Next, make a deep copy of all the pumps for this tank, and preserve the same order.
+        Pump * rhsPump = rhsTraverse->m_pumps;
+
+        Pump * newPumpFirst = nullptr;
+        Pump * newPumpLast = nullptr;
+
+        while (rhsPump != nullptr) {
+            Pump * newPump = new Pump(rhsPump->m_pumpID, rhsPump->m_target, nullptr);
+
+            if (newPumpFirst == nullptr) {
+                newPumpFirst = newPump;
+                newPumpLast = newPump;
+            } else {
+                newPumpLast->m_next = newPump;
+                newPumpLast = newPump;
+            }
+
+            rhsPump = rhsPump->m_next;
+        }
+
+        newTank->m_pumps = newPumpFirst;
+
+        rhsTraverse = rhsTraverse->m_next;
+
+    } while (rhsTraverse != rhsFirst);
+
+    // Now that we copied everything, connect the last tank to the first tank to make it circular again.
+    lhsLast->m_next = lhsFirst;
+
+    // Just in case something goes wrong and m_current wasn't set, set it to the last tank.
+    if (m_current == nullptr) {
+        m_current = lhsLast;
+    }
+
+    return *this;
 }
 
 void FuelSys::dumpSys() const{
