@@ -348,6 +348,8 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
     targetTank->m_tankFuel += transferFuel;
     sourceTank->m_tankFuel -= transferFuel;
 
+    // Rotate back so that the source tank is the first tank again (keeps the list position consistent).
+    findTank(tankID);
     return true;
 }
 
