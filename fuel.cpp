@@ -368,7 +368,8 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
 }
 
 bool FuelSys::fill(int tankID, int fuel){
-    // Look for the tank we want to fill and ensure that it exists. Rotate the list so that the tank is in the first position. (m_current->m_next)
+    // Look for the tank we want to fill and ensure that it exists.
+    // Rotate the list so that the tank is in the first position. (m_current->m_next)
     if (findTank(tankID) == false) {
         return false;
     }
@@ -387,6 +388,9 @@ bool FuelSys::fill(int tankID, int fuel){
         currentTank->m_tankFuel = currentCapacity;
         return true;
     }
+
+    // If something unexpected happens, just return false.
+    return false;
 }
 
 const FuelSys & FuelSys::operator=(const FuelSys & rhs){
