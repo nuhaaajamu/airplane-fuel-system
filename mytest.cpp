@@ -543,6 +543,56 @@ bool Tester::drainNormal() {
     return true;
 }
 
+bool Tester::drainError() {
+    // Case 1: empty system
+    {
+        FuelSys obj;
+        if (obj.drain(1, 1, 100) != false) {
+            cout << "Error: drain() returned true for an empty system" << endl;
+            return false;
+        }
+    }
+
+    // Case 2: source tank does not exist
+    {
+        FuelSys obj;
+        obj.addTank(2, 2000, 500);
+
+        if (obj.drain(99, 1, 100) != false) {
+            cout << "Error: drain() returned true for a non-existent source tank" << endl;
+            return false;
+        }
+    }
+
+    // Case 3: source tank exists but has no pumps
+    {
+        FuelSys obj;
+        obj.addTank(1, 2000, 500);
+        obj.addTank(2, 2000, 0);
+
+        if (obj.drain(1, 3, 100) != false) {
+            cout << "Error: drain() returned true even though no pumps exist" << endl;
+            return false;
+        }
+    }
+
+    // Case 4: pump does not exist in source tank
+    {
+        FuelSys obj;
+        obj.addTank(1, 2000, 500);
+        obj.addTank(2, 2000, 0);
+        obj.addPump(1, 5, 2);
+
+        if (obj.drain(1, 99, 100) != false) {
+            cout << "Error: drain() returned true for a non-existent pump" << endl;
+            return false;
+        }
+    }
+
+    cout << "Success: drain() safely guarded against error cases" << endl;
+    return true;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
