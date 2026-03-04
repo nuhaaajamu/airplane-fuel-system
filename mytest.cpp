@@ -384,6 +384,7 @@ bool Tester::addDuplicatePump() {
     }
 
     cout << "Success: Duplicate pumps are not able to be added to a tank" << endl;
+    return true;
 }
 
 bool Tester::addPumpInvalidTank() {
