@@ -44,9 +44,7 @@ bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
         newTank->m_next = m_current->m_next;
 
         m_current->m_next = newTank;  // Former last tank should point to new tank.
-
         m_current = newTank;  // Now, update so that current stores the newly added node.
-
         return true;
     }
 
@@ -144,7 +142,7 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
         return false;
     }
 
-    // Find the tank that we are adding a pump to and ensure that it exists. This rotates the list so that the tank is the "first tank" in the list.
+    // Find the tank that we are adding a pump to and ensure that it exists. This rotates the list so that the tank is the "first tank" in the list (m_current->m_next)
     if (findTank(tankID) == false) {
         return false;
     }
