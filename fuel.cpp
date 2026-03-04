@@ -317,11 +317,25 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
 
 
 bool FuelSys::fill(int tankID, int fuel){
-    // This function fills up the tankID with the amount of fuel.
-    // If the empty space of the tank is less than fuel the function still fills up the tank up to its capacity and returns true.
-    // If the tank does not exist the function returns false.
+    // Look for the tank we want to fill and ensure that it exists. Rotate the list so that the tank is in the first position. (m_current-m_next)
+    if (findTank(tankID) == false) {
+        return false;
+    }
 
+    Tank * currentTank = m_current->m_next;
+    int currentFuel = currentTank->m_tankFuel;
+    int currentCapacity = currentTank->m_tankCapacity;
+    int leftToFill = currentCapacity - currentFuel;
 
+    // Fill the tank with fuel.
+    if (fuel <= leftToFill) {
+        currentTank->m_tankFuel += fuel;
+        return true;
+    }
+    if (fuel > leftToFill) {
+        currentTank->m_tankFuel = currentCapacity;
+        return true;
+    }
 }
 
 
