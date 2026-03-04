@@ -211,31 +211,33 @@ bool FuelSys::removePump(int tankID, int pumpID){
     }
 
     // Check if the pump we are looking for is the "head" of the list.
-    Pump * nextPump = currentPump->m_next;
     if (currentPump->m_pumpID == pumpID) {
+        Pump * nextPump = currentPump->m_next;
         delete currentPump;
         m_current->m_next->m_pumps = nextPump;
         return true;
     }
 
-    // Ensure that pumpID exists.
+    // Now we remove from the middle/end.
+    // The only thing we need to be careful about is that currentPump->m_next might be nullptr.
     bool foundPump = false;
-    Pump * beforeTarget = nullptr;
-    while (currentPump != nullptr && foundPump == false) {
-        if (pumpID == currentPump->m_next->m_pumpID) {
+    Pump * beforeTarget = currentPump;
+
+    while (beforeTarget->m_next != nullptr && foundPump == false) {
+        if (beforeTarget->m_next->m_pumpID == pumpID) {
             foundPump = true;
-            beforeTarget = currentPump;
+        } else {
+            beforeTarget = beforeTarget->m_next;
         }
-        currentPump = currentPump->m_next;
     }
 
-    // A pumpID must be found as well as the pump before it in order to proceed in removing the target pump.
-    if (foundPump == false || beforeTarget == nullptr) {
+    // A pumpID must be found as well as the pump before it in order to proceed.
+    if (foundPump == false) {
         return false;
     }
 
     // Remove the pump.
-    Pump * target = beforeTarget->m_next; // This is the pump we are removing.
+    Pump * target = beforeTarget->m_next;
     beforeTarget->m_next = target->m_next;
     delete target;
     return true;
