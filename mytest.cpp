@@ -478,6 +478,71 @@ bool Tester::removeTankError() {
     return true;
 }
 
+bool Tester::drainNormal() {
+    // Case 1: requested fuel is less than the empty space of the target tank
+    {
+        FuelSys obj;
+
+        obj.addTank(1, 2000, 1000); // source
+        obj.addTank(2, 2000, 0);    // target
+
+        if (obj.addPump(1, 5, 2) == false) {
+            cout << "Error: addPump() failed for drain normal case" << endl;
+            return false;
+        }
+
+        if (obj.drain(1, 5, 400) == false) {
+            cout << "Error: drain() failed when fuel should fit in target tank" << endl;
+            return false;
+        }
+
+        // Check amounts after transfer
+        obj.findTank(1);
+        int sourceFuel = obj.m_current->m_next->m_tankFuel;
+
+        obj.findTank(2);
+        int targetFuel = obj.m_current->m_next->m_tankFuel;
+
+        if (sourceFuel != 600 || targetFuel != 400) {
+            cout << "Error: drain() transferred the wrong amount (fit case)" << endl;
+            return false;
+        }
+    }
+
+    // Case 2: requested fuel is more than the empty space of the target tank
+    {
+        FuelSys obj;
+
+        obj.addTank(1, 2000, 1000); // source
+        obj.addTank(2, 2000, 1900); // target (only 100 space left)
+
+        if (obj.addPump(1, 7, 2) == false) {
+            cout << "Error: addPump() failed for drain overflow case" << endl;
+            return false;
+        }
+
+        if (obj.drain(1, 7, 500) == false) {
+            cout << "Error: drain() failed when target should just fill up" << endl;
+            return false;
+        }
+
+        obj.findTank(1);
+        int sourceFuel = obj.m_current->m_next->m_tankFuel;
+
+        obj.findTank(2);
+        int targetFuel = obj.m_current->m_next->m_tankFuel;
+
+        // Target should cap at 2000, and source should lose only 100
+        if (sourceFuel != 900 || targetFuel != 2000) {
+            cout << "Error: drain() transferred the wrong amount (overflow case)" << endl;
+            return false;
+        }
+    }
+
+    cout << "Success: drain() transferred fuel correctly for normal cases" << endl;
+    return true;
+}
+
 int main() {
     // 1. Test addTank function
     cout << "======= Testing addTank() =======" << endl;
