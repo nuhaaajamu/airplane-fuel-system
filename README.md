@@ -51,23 +51,29 @@ This structure allows the fuel system to cycle through tanks continuously when p
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```
-fuel.h
-fuel.cpp
-driver.cpp
-mytest.cpp
+fuel.h        # Header file defining the FuelSys, Tank, and Pump classes
+fuel.cpp      # Implementation of the fuel system data structure
+mytest.cpp    # Test program containing main()
+driver.cpp    # Instructor-provided driver for reference testing
 README.md
 images/
 ```
+
+### Notes
+
+`mytest.cpp` is the primary entry point of the program and contains the `main()` function used to run and test the fuel system implementation.
+
+`driver.cpp` was provided by the instructor as a reference driver to help verify functionality during development. It is not required to compile or run the final program.
 
 ---
 
 # Compilation
 
 ```bash
-g++ driver.cpp fuel.cpp -o fuel_system
+g++ fuel. fuel.cpp mytest.cpp -o fuel_system
 ```
 
 Run:
