@@ -73,7 +73,7 @@ images/
 # Compilation
 
 ```bash
-g++ fuel. fuel.cpp mytest.cpp -o fuel_system
+g++ fuel.h fuel.cpp mytest.cpp -o fuel_system
 ```
 
 Run:
