@@ -71,7 +71,7 @@ bool FuelSys::addTank(int tankID, int tankCap, int tankFuel) {
         newTank->m_next = m_current->m_next;
 
         m_current->m_next = newTank;  // Former last tank should point to new tank.
-        m_current = newTank;  // Now, update so that current stores the newly added node.
+        m_current = newTank;          // Now, update so that current stores the newly added node.
         return true;
     }
 
@@ -211,7 +211,7 @@ bool FuelSys::addPump(int tankID, int pumpID, int targetTank){
     Pump * head = m_current->m_next->m_pumps;
     Pump * newPump = new Pump(pumpID, targetTank, head);
 
-    // This is the part that actually attaches it to the tank's pump list.
+    // Attach it to the tank's list of pumps.
     m_current->m_next->m_pumps = newPump;
 
     return true;
@@ -238,7 +238,6 @@ bool FuelSys::removePump(int tankID, int pumpID){
     }
 
     // Now we remove from the middle/end.
-    // The only thing we need to be careful about is that currentPump->m_next might be nullptr.
     bool foundPump = false;
     Pump * beforeTarget = currentPump;
 
@@ -336,7 +335,7 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
 
     int sourceFuel = sourceTank->m_tankFuel;
 
-    // We can only transfer as much as the source has, and as much as the target can take.
+    // We can only transfer as much as the source has, and as much as the target can receive.
     int transferFuel = fuel;
     if (transferFuel > sourceFuel) {
         transferFuel = sourceFuel;
@@ -348,7 +347,7 @@ bool FuelSys::drain(int tankID, int pumpID, int fuel){
     targetTank->m_tankFuel += transferFuel;
     sourceTank->m_tankFuel -= transferFuel;
 
-    // Rotate back so that the source tank is the first tank again (keeps the list position consistent).
+    // Rotate back so that the source tank is the first tank again.
     findTank(tankID);
     return true;
 }
@@ -425,12 +424,12 @@ const FuelSys & FuelSys::operator=(const FuelSys & rhs){
     Tank * lhsLast = nullptr;
 
     do {
-        // Create the new tank (pumps will be copied right after).
+        // Create the new tank.
         Tank * newTank = new Tank(rhsTraverse->m_tankID, rhsTraverse->m_tankCapacity, rhsTraverse->m_tankFuel);
         newTank->m_next = nullptr;
         newTank->m_pumps = nullptr;
 
-        // Build the forward list first, then we will connect it into a circle at the end.
+        // Build the forward list first.
         if (lhsFirst == nullptr) {
             lhsFirst = newTank;
         } else {
@@ -469,7 +468,7 @@ const FuelSys & FuelSys::operator=(const FuelSys & rhs){
 
     } while (rhsTraverse != rhsFirst);
 
-    // Now that we copied everything, connect the last tank to the first tank to make it circular again.
+    // Now that we copied everything, connect the last tank to the first tank to make it a circular list.
     lhsLast->m_next = lhsFirst;
 
     // Just in case something goes wrong and m_current wasn't set, set it to the last tank.
